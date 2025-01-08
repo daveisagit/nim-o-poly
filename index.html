@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--========== Google Material Icons ==========-->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <!--========== Bootstrap ==========-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!--========== SVG CSS ==========-->
+    <link rel="stylesheet" href="assets/css/svg.css">
+
+    <!--========== Bamboo font ==========-->
+    <link href="https://fonts.cdnfonts.com/css/bamboo-2" rel="stylesheet">
+
+    <title>Nim-o-poly</title>
+
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="assets/favi/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favi/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favi/favicon-16x16.png">
+    <link rel="manifest" href="assets/favi/site.webmanifest"> -->
+
+</head>
+
+<body>
+    <!--========== HEADER ==========-->
+    <div class="container-fluid text-center">
+        <div class="py-2 d-flex flex-row justify-content-between" id="headerRow">
+
+            <div class="text-start">
+                <h1 class="text-center"><span class="bamboo badge bg-success" id="playerA">A</span></h1>
+            </div>
+
+            <div class="text-center">
+                <h1 class="bamboo">Nim-o-Poly</h1>
+
+                <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#new-game"
+                    aria-expanded="false" aria-controls="collapseNewGame" title="Start a new game">
+                    <span class="material-symbols-outlined interests__icon h2">sports</span>
+                </button>
+
+                <button type="button" class="btn btn-sm" id="btnUndo" title="Undo">
+                    <span class="material-symbols-outlined interests__icon">undo</span>
+                </button>
+                <h5 class="d-inline"><span class="badge bg-secondary" id="sizeId"
+                        title="The size of the Polyomino">1</span></h5>
+                <button type="button" class="btn btn-sm" id="btnRedo" title="Redo">
+                    <span class="material-symbols-outlined interests__icon">redo</span>
+                </button>
+
+                <button type="button" class="btn btn-sm" id="btnTheme" title="Theme Light/Dark mode">
+                    <span class="material-symbols-outlined interests__icon" id="btnThemeText">light_mode</span>
+                </button>
+
+
+            </div>
+            <div class="text-end">
+                <h1 class="text-center"><span class="bamboo badge bg-success" id="playerB">B</span></h1>
+            </div>
+
+        </div>
+
+        <!-- New Game -->
+
+        <div class="collapse" id="new-game">
+            <div>
+                <h2>Start a new game</h2>
+                <p>Select shape type and play to start</p>
+                <button type="button" class="btn" id="btnShape" title="Shape type">
+                    <span class="material-symbols-outlined interests__icon h2" id="lblShape">hexagon</span>
+                </button>
+                <p>Click play to begin</p>
+                <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
+                    <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Help -->
+
+        <div class="collapse" id="help">
+            <div class="mb-4 d-flex justify-content-between">
+                <div></div>
+                <div>
+                    <h1 class="my-2">Polyominoes with Collinear Cells</h1>
+
+
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#help"
+                        aria-label="Close"></button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Render the grid layout in this div-->
+        <div id="gridId"></div>
+
+    </div>
+
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h1>Hi 🙂</h1>
+                    <h3>Welcome to Poly-Play</h3>
+                    <h3>⚒️</h3>
+                    <h5>A safe place for constructing polyominoes</h5>
+                    <p class="my-4">No nagging doubts 🤔 or piles of screwed up paper 🗑️</p>
+
+                    <div class="my-4">
+                        <span class="align-middle">Click</span>
+                        <span class="align-middle material-symbols-outlined interests__icon"
+                            id="btnThemeText">help</span>
+                        <span class="align-middle">help for more details.</span>
+                    </div>
+                    <p>Or if you prefer, just get stuck in and click stuff.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- d3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+    <!-- main -->
+    <script type="module" src="assets/js/main.js"></script>
+
+</body>
