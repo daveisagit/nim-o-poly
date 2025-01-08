@@ -81,6 +81,10 @@ line {
     stroke-linecap: round;
 }
 
+.player-to-play {
+    background-color: darkseagreen;
+}
+
 
 /* Dark Mode for outline and dot */
 div.dark .cell>polygon {
@@ -95,6 +99,10 @@ div.dark .cell>circle {
 div.dark .cell>text {
     stroke: var(--cell-stroke-dark);
     fill: var(--cell-stroke-dark);
+}
+
+div.dark .player-to-play {
+    background-color: rgb(34, 94, 34);
 }
 
 /* stop Bootstrap oddness after click */

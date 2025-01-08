@@ -220,7 +220,7 @@ function update_grid() {
         .attr("dominant-baseline", "middle")
         .attr("dy", "-1em")
         .attr("font-size", "50%")
-        .attr("stroke-width", "0.5")
+        .attr("stroke-width", "0.1")
         // .attr("fill", "green")
         // .attr("stroke", "green")
         .attr("x", d => {
@@ -295,12 +295,14 @@ function set_theme() {
         btnThemeText.textContent = "dark_mode";
         document.documentElement.setAttribute("data-bs-theme", "light")
         svgElement.classList.remove("dark");
+        header_row.classList.remove("dark");
         sessionStorage.setItem("theme", "light");
     }
     else {
         btnThemeText.textContent = "light_mode";
         document.documentElement.setAttribute("data-bs-theme", "dark")
         svgElement.classList.add("dark");
+        header_row.classList.add("dark");
         sessionStorage.setItem("theme", "dark");
     }
 }
@@ -316,7 +318,7 @@ function to_play(d) {
 }
 
 function set_header() {
-    const turn_class = "bg-success";
+    const turn_class = "player-to-play";
     if (undo_index % 2 == 1) {
         playerA.classList.add(turn_class);
         playerB.classList.remove(turn_class);
