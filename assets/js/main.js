@@ -78,13 +78,11 @@ function get_session() {
         document.getElementById(`co${s}`).checked = true;
     }
 
-    const bsGrid = new bootstrap.Collapse("#gridId");
-    const bsNew = new bootstrap.Collapse("#new-game");
     if (starting_player != null) {
+        const bsGrid = new bootstrap.Collapse("#gridId");
         bsGrid.show();
-        // bsNew.hide();
     } else {
-        // bsGrid.hide();
+        const bsNew = new bootstrap.Collapse("#new-game");
         bsNew.show();
     }
 
@@ -550,7 +548,10 @@ btnNew.addEventListener("click", () => {
     // collapse the settings div
     const bsCollapse = bootstrap.Collapse.getInstance("#new-game");
     bsCollapse.hide();
-    const divGrid = bootstrap.Collapse.getInstance("#gridId");
+    var divGrid = bootstrap.Collapse.getInstance("#gridId");
+    if (divGrid == null) {
+        divGrid = new bootstrap.Collapse("#gridId");
+    }
     divGrid.show();
 
     refresh_grid();
