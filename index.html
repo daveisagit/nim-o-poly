@@ -77,27 +77,68 @@
 
         </div>
 
-        <!-- New Game -->
+        <!-- New Game / Settings -->
 
         <div class="py-3 collapse" id="new-game">
-            <h2>Players</h2>
-            <div class="d-flex justify-content-center">
-                <div class="mb-3 w-auto">
-                    <label for="playerAName">Name of Player A</label>
-                    <input type="text" class="form-control" id="playerAName" aria-describedby="playerAHelp"
-                        placeholder="optional">
-                    <label for="playerBName">Name of Player B</label>
-                    <input type="text" class="form-control" id="playerBName" aria-describedby="playerBHelp"
-                        placeholder="optional">
+            <h3>Player Names</h3>
+            <div class="">
+                <form>
+                    <div class="form-group d-flex justify-content-center">
+
+                        <div class="w-auto">
+
+                            <div class="input-group pb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPrepend">A</span>
+                                </div>
+                                <input type="text" class="form-control" id="playerAName" aria-describedby="playerAHelp"
+                                    placeholder="optional">
+                            </div>
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPrepend">B</span>
+                                </div>
+                                <input type="text" class="form-control" id="playerBName" aria-describedby="playerBHelp"
+                                    placeholder="optional">
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <h3 class="pt-4">Start a new game</h3>
+            <p>Select the polyomino shape <span
+                    class="align-middle material-symbols-outlined interests__icon">square</span>
+                <span class="align-middle">/</span>
+                <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
+            </p>
+            <button type="button" class="btn" id="btnShape" title="Shape type">
+                <span class="material-symbols-outlined interests__icon h1" id="lblShape">hexagon</span>
+            </button>
+
+            <div class="">
+                <p>Set the limit for the maximum number of collinear cells allowed.
+                    <br>The default of 3 is good place to start.
+                </p>
+                <div class="d-flex justify-content-center m-4" id="collinearChoice">
+                    <input type="radio" class="btn-check" name="collinear-options" id="co3" autocomplete="off" value="3"
+                        checked>
+                    <label class="btn mx-2" for="co3">3</label>
+                    <input type="radio" class="btn-check" name="collinear-options" id="co4" autocomplete="off"
+                        value="4">
+                    <label class="btn mx-2" for="co4">4</label>
+                    <input type="radio" class="btn-check" name="collinear-options" id="co5" autocomplete="off"
+                        value="5">
+                    <label class="btn mx-2" for="co5">5</label>
                 </div>
             </div>
 
-            <h2>Start a new game</h2>
-            <p>Select shape type and play to start</p>
-            <button type="button" class="btn" id="btnShape" title="Shape type">
-                <span class="material-symbols-outlined interests__icon h2" id="lblShape">hexagon</span>
-            </button>
-            <p>Click play to begin</p>
+
+
+            <p>Click play to start a new game with these settings</p>
             <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
                 <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
             </button>

@@ -26,7 +26,6 @@ const lblPlayerBName = document.getElementById("lblPlayerBName");
 
 const setCollinearityButton = document.getElementById("btnSetCollinearity");
 const collinearChoices = document.getElementById("collinearChoice");
-const maxCollinear = document.getElementById("maxCollinear");
 const collinearModal = document.getElementById("collinearModal");
 const welcomeModal = document.getElementById("welcomeModal");
 
@@ -65,6 +64,12 @@ function get_session() {
     if (pb == null) pb = "";
     lblPlayerBName.textContent = pb;
     playerBName.value = pb;
+
+    var s = sessionStorage.getItem("nim_collinearity");
+    if (s != null) {
+        document.getElementById(`co${s}`).checked = true;
+    }
+
 }
 
 function set_shape_class() {
@@ -506,12 +511,23 @@ btnShape.addEventListener("click", () => {
 New Game
 */
 btnNew.addEventListener("click", () => {
+
+    // clear the grid
     sessionStorage.removeItem("nim_instructions");
     sessionStorage.removeItem("nim_undo_index");
-    shape = lblShape.textContent
-    sessionStorage.setItem("nim_shape", shape);
     instructions = null;
     undo_index = null;
+
+    // set the shape
+    shape = lblShape.textContent
+    sessionStorage.setItem("nim_shape", shape);
+
+    // set the collinearity
+    var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
+    sessionStorage.setItem("nim_collinearity", v);
+    collinearity = parseInt(v);
+
+    // collapse the settings div
     const bsCollapse = bootstrap.Collapse.getInstance("#new-game");
     bsCollapse.hide();
     refresh_grid();
@@ -591,7 +607,7 @@ var layout;
 var wdw_w;
 var wdw_h;
 var shape_class;
-var collinearity = 3;
+var collinearity;
 var collinear_points;
 var last_border_cell_selected;
 var collinear_line;
