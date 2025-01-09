@@ -35,6 +35,7 @@
             <div class="py-2 d-flex flex-row justify-content-between">
                 <div class="text-start">
                     <h1 class="text-center rounded-4 px-3" id="playerA">A</h1>
+                    <p class="text-center" id="lblPlayerAName"></p>
                 </div>
 
                 <div class="text-center">
@@ -42,6 +43,7 @@
                 </div>
                 <div class="text-end">
                     <h1 class="text-center rounded-4 px-3" id="playerB">B</h1>
+                    <p class="text-center" id="lblPlayerBName"></p>
                 </div>
             </div>
 
@@ -54,8 +56,8 @@
                 <button type="button" class="btn btn-sm" id="btnUndo" title="Undo">
                     <span class="material-symbols-outlined interests__icon">undo</span>
                 </button>
-                <h2 class="d-inline"><span class="badge bg-secondary" id="sizeId"
-                        title="The size of the Polyomino">1</span></h2>
+                <h1 class="d-inline"><span class="badge bg-secondary" id="sizeId"
+                        title="The size of the Polyomino">1</span></h1>
                 <button type="button" class="btn btn-sm" id="btnRedo" title="Redo">
                     <span class="material-symbols-outlined interests__icon">redo</span>
                 </button>
@@ -76,17 +78,28 @@
         <!-- New Game -->
 
         <div class="collapse" id="new-game">
-            <div>
-                <h2>Start a new game</h2>
-                <p>Select shape type and play to start</p>
-                <button type="button" class="btn" id="btnShape" title="Shape type">
-                    <span class="material-symbols-outlined interests__icon h2" id="lblShape">hexagon</span>
-                </button>
-                <p>Click play to begin</p>
-                <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
-                    <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
-                </button>
+            <h2>Players</h2>
+            <div class="d-flex justify-content-center">
+                <div class="mb-3 w-25">
+                    <label for="playerAName">Name of Player A</label>
+                    <input type="text" class="form-control" id="playerAName" aria-describedby="playerAHelp"
+                        placeholder="optional">
+                    <label for="playerBName">Name of Player B</label>
+                    <input type="text" class="form-control" id="playerBName" aria-describedby="playerBHelp"
+                        placeholder="optional">
+                </div>
             </div>
+
+            <h2>Start a new game</h2>
+            <p>Select shape type and play to start</p>
+            <button type="button" class="btn" id="btnShape" title="Shape type">
+                <span class="material-symbols-outlined interests__icon h2" id="lblShape">hexagon</span>
+            </button>
+            <p>Click play to begin</p>
+            <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
+                <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
+            </button>
+
         </div>
 
 

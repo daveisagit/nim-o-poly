@@ -18,6 +18,11 @@ const lblSize = document.getElementById("sizeId");
 const header_row = document.getElementById("headerRow");
 const undoButton = document.getElementById("btnUndo");
 const redoButton = document.getElementById("btnRedo");
+const playerAName = document.getElementById("playerAName");
+const playerBName = document.getElementById("playerBName");
+const lblPlayerAName = document.getElementById("lblPlayerAName");
+const lblPlayerBName = document.getElementById("lblPlayerBName");
+
 
 const setCollinearityButton = document.getElementById("btnSetCollinearity");
 const collinearChoices = document.getElementById("collinearChoice");
@@ -26,21 +31,19 @@ const collinearModal = document.getElementById("collinearModal");
 const welcomeModal = document.getElementById("welcomeModal");
 
 
-function set_shape() {
-    // Get in shape
-    if (shape == null) {
-        shape = "hex";
-        var s = sessionStorage.getItem("shape");
-        if (s != null) shape = s;
-    }
-    if (shape == "squ") {
-        lblShape.textContent = "square";
-        shape_class = new poly.Square();
-    } else {
-        lblShape.textContent = "hexagon";
-        shape_class = new poly.Hexagon();
-    }
-}
+// function set_shape() {
+//     // Get in shape
+//     if (shape == null) {
+//         shape = "hex";
+//         var s = sessionStorage.getItem("nim_shape");
+//         if (s != null) shape = s;
+//     }
+//     if (shape == "squ") {
+//         lblShape.textContent = "square";
+//     } else {
+//         lblShape.textContent = "hexagon";
+//     }
+// }
 
 // function set_collinearity() {
 //     if (collinearity == null) {
@@ -51,6 +54,26 @@ function set_shape() {
 //     maxCollinear.textContent = collinearity.toString();
 //     document.getElementById(`co${collinearity}`).checked = true;
 // }
+
+function get_session() {
+    var pa = sessionStorage.getItem("nim_A");
+    if (pa == null) pa = "";
+    lblPlayerAName.textContent = pa;
+    playerAName.value = pa;
+
+    var pb = sessionStorage.getItem("nim_B");
+    if (pb == null) pb = "";
+    lblPlayerBName.textContent = pb;
+    playerBName.value = pb;
+}
+
+function set_shape_class() {
+    if (shape == "square") {
+        shape_class = new poly.Square();
+    } else {
+        shape_class = new poly.Hexagon();
+    }
+}
 
 function get_instructions() {
     // Get the instructions and point of undo from session storage
@@ -337,6 +360,7 @@ function set_header() {
 
 function refresh_grid() {
     set_layout();
+    set_shape_class();
     get_instructions();
     set_points();
     refresh_ui();
@@ -471,13 +495,11 @@ btnTheme.addEventListener("click", () => {
 Shape 
 */
 btnShape.addEventListener("click", () => {
-    if (shape == "squ") {
-        shape = "hex";
+    if (lblShape.textContent == "hexagon") {
+        lblShape.textContent = "square";
     } else {
-        shape = "squ";
+        lblShape.textContent = "hexagon";
     }
-    sessionStorage.setItem("shape", shape);
-    set_shape();
 });
 
 /*
@@ -486,6 +508,8 @@ New Game
 btnNew.addEventListener("click", () => {
     sessionStorage.removeItem("nim_instructions");
     sessionStorage.removeItem("nim_undo_index");
+    shape = lblShape.textContent
+    sessionStorage.setItem("nim_shape", shape);
     instructions = null;
     undo_index = null;
     const bsCollapse = bootstrap.Collapse.getInstance("#new-game");
@@ -538,6 +562,17 @@ redoButton.addEventListener("click", () => {
 //     refresh_grid();
 // });
 
+
+playerAName.oninput = function () {
+    lblPlayerAName.textContent = playerAName.value;
+    sessionStorage.setItem("nim_A", playerAName.value);
+};
+playerBName.oninput = function () {
+    lblPlayerBName.textContent = playerBName.value;
+    sessionStorage.setItem("nim_B", playerBName.value);
+};
+
+
 /*
 =========================================================================
 MAIN Script
@@ -566,7 +601,8 @@ if (theme == null) {
     theme = "dark";
 }
 set_theme();
-set_shape();
+// set_shape();
+get_session();
 
 /*
 SVG and graphic elements
