@@ -33,7 +33,7 @@
         <div class="py-2 d-flex flex-row justify-content-between" id="headerRow">
 
             <div class="text-start">
-                <h1 class="text-center rounded-4 px-3 pb-2" id="playerA">A</h1>
+                <h1 class="text-center rounded-4 px-3 pb-1" id="playerA">A</h1>
             </div>
 
             <div class="text-center">
@@ -53,6 +53,11 @@
                     <span class="material-symbols-outlined interests__icon">redo</span>
                 </button>
 
+                <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#help"
+                    aria-expanded="false" aria-controls="collapseHelp" title="Help / About">
+                    <span class="material-symbols-outlined interests__icon">help</span>
+                </button>
+
                 <button type="button" class="btn btn-sm" id="btnTheme" title="Theme Light/Dark mode">
                     <span class="material-symbols-outlined interests__icon" id="btnThemeText">light_mode</span>
                 </button>
@@ -60,7 +65,7 @@
 
             </div>
             <div class="text-end">
-                <h1 class="text-center rounded-4 px-3 pb-2" id="playerB">B</h1>
+                <h1 class="text-center rounded-4 px-3 pb-1" id="playerB">B</h1>
             </div>
 
         </div>
@@ -89,7 +94,29 @@
             <div class="mb-4 d-flex justify-content-between">
                 <div></div>
                 <div>
-                    <h1 class="my-2">Polyominoes with Collinear Cells</h1>
+                    <h1 class="my-2">Rules</h1>
+
+                    <div class="text-start">
+                        <h3>Basic Play</h3>
+                        <p>Last player to add a cell wins, if you can't go then you've lost.</p>
+
+                        <h3>Stakes Variation</h3>
+                        <p>Play stops when the target number of cells is reached (or, if play can't continue).
+                            <br>The first player to reach the target wins.
+                            <br> If the target is unreachable then as in basic play whoever played last wins.
+                        </p>
+                        <p>If Player A goes first, then Player B chooses the initial number of target cells (vice
+                            versa).</p>
+
+                        <p>However, on their turn players can increase the target by 1 during play before laying a new
+                            cell.
+                        </p>
+                        <p>The right to be able to do is like using doubling dice in backgammon.
+                            <br>Initially, any player can increase the target by 1.
+                            <br>Subsequently, the right to increase the target by 1 alternates.
+                        </p>
+                        <p>The winners reward is a stake value equal to the target when the game stops.</p>
+                    </div>
 
 
                 </div>
