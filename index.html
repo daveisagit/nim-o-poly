@@ -30,15 +30,22 @@
 <body>
     <!--========== HEADER ==========-->
     <div class="container-fluid text-center">
-        <div class="py-2 d-flex flex-row justify-content-between" id="headerRow">
+        <div class="" id="headerRow">
 
-            <div class="text-start">
-                <h1 class="text-center rounded-4 px-3 pb-1" id="playerA">A</h1>
+            <div class="py-2 d-flex flex-row justify-content-between">
+                <div class="text-start">
+                    <h1 class="text-center rounded-4 px-3" id="playerA">A</h1>
+                </div>
+
+                <div class="text-center">
+                    <h1 class="bamboo">Nim-o-Poly</h1>
+                </div>
+                <div class="text-end">
+                    <h1 class="text-center rounded-4 px-3" id="playerB">B</h1>
+                </div>
             </div>
 
-            <div class="text-center">
-                <h1 class="bamboo">Nim-o-Poly</h1>
-
+            <div class="py-2 d-flex flex-row justify-content-center">
                 <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#new-game"
                     aria-expanded="false" aria-controls="collapseNewGame" title="Start a new game">
                     <span class="material-symbols-outlined interests__icon h2">sports</span>
@@ -47,8 +54,8 @@
                 <button type="button" class="btn btn-sm" id="btnUndo" title="Undo">
                     <span class="material-symbols-outlined interests__icon">undo</span>
                 </button>
-                <h5 class="d-inline"><span class="badge bg-secondary" id="sizeId"
-                        title="The size of the Polyomino">1</span></h5>
+                <h2 class="d-inline"><span class="badge bg-secondary" id="sizeId"
+                        title="The size of the Polyomino">1</span></h2>
                 <button type="button" class="btn btn-sm" id="btnRedo" title="Redo">
                     <span class="material-symbols-outlined interests__icon">redo</span>
                 </button>
@@ -61,12 +68,8 @@
                 <button type="button" class="btn btn-sm" id="btnTheme" title="Theme Light/Dark mode">
                     <span class="material-symbols-outlined interests__icon" id="btnThemeText">light_mode</span>
                 </button>
-
-
             </div>
-            <div class="text-end">
-                <h1 class="text-center rounded-4 px-3 pb-1" id="playerB">B</h1>
-            </div>
+
 
         </div>
 
@@ -111,7 +114,7 @@
                         <p>However, on their turn players can increase the target by 1 during play before laying a new
                             cell.
                         </p>
-                        <p>The right to be able to do is like using doubling dice in backgammon.
+                        <p>The right to be able to do so, is like using the doubling dice in backgammon.
                             <br>Initially, any player can increase the target by 1.
                             <br>Subsequently, the right to increase the target by 1 alternates.
                         </p>
