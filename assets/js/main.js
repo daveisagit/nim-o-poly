@@ -13,7 +13,7 @@ const btnTheme = document.getElementById("btnTheme");
 const btnThemeText = document.getElementById("btnThemeText");
 const playerA = document.getElementById("playerA");
 const playerB = document.getElementById("playerB");
-const svgElement = document.getElementById("gridId");
+const divGrid = document.getElementById("gridId");
 const lblSize = document.getElementById("sizeId");
 const header_row = document.getElementById("headerRow");
 const undoButton = document.getElementById("btnUndo");
@@ -22,13 +22,15 @@ const playerAName = document.getElementById("playerAName");
 const playerBName = document.getElementById("playerBName");
 const lblPlayerAName = document.getElementById("lblPlayerAName");
 const lblPlayerBName = document.getElementById("lblPlayerBName");
-
-
-const setCollinearityButton = document.getElementById("btnSetCollinearity");
 const collinearChoices = document.getElementById("collinearChoice");
-const collinearModal = document.getElementById("collinearModal");
+const radioAToPlay = document.getElementById("AToPlay");
+const radioBToPlay = document.getElementById("BToPlay");
+const divPlayers = document.getElementById("divPlayers");
+
+
 const welcomeModal = document.getElementById("welcomeModal");
 
+const turn_class = "player-to-play";
 
 // function set_shape() {
 //     // Get in shape
@@ -55,6 +57,12 @@ const welcomeModal = document.getElementById("welcomeModal");
 // }
 
 function get_session() {
+
+    var s;
+
+    s = sessionStorage.getItem("nim_starting_player");
+    if (s != null) starting_player = s;
+
     var pa = sessionStorage.getItem("nim_A");
     if (pa == null) pa = "";
     lblPlayerAName.textContent = pa;
@@ -65,9 +73,19 @@ function get_session() {
     lblPlayerBName.textContent = pb;
     playerBName.value = pb;
 
-    var s = sessionStorage.getItem("nim_collinearity");
+    s = sessionStorage.getItem("nim_collinearity");
     if (s != null) {
         document.getElementById(`co${s}`).checked = true;
+    }
+
+    const bsGrid = new bootstrap.Collapse("#gridId");
+    const bsNew = new bootstrap.Collapse("#new-game");
+    if (starting_player != null) {
+        bsGrid.show();
+        // bsNew.hide();
+    } else {
+        // bsGrid.hide();
+        bsNew.show();
     }
 
 }
@@ -322,14 +340,14 @@ function set_theme() {
     if (theme == "light") {
         btnThemeText.textContent = "dark_mode";
         document.documentElement.setAttribute("data-bs-theme", "light")
-        svgElement.classList.remove("dark");
+        divGrid.classList.remove("dark");
         header_row.classList.remove("dark");
         sessionStorage.setItem("theme", "light");
     }
     else {
         btnThemeText.textContent = "light_mode";
         document.documentElement.setAttribute("data-bs-theme", "dark")
-        svgElement.classList.add("dark");
+        divGrid.classList.add("dark");
         header_row.classList.add("dark");
         sessionStorage.setItem("theme", "dark");
     }
@@ -346,7 +364,6 @@ function to_play(d) {
 }
 
 function set_header() {
-    const turn_class = "player-to-play";
     if (undo_index % 2 == 1) {
         playerA.classList.add(turn_class);
         playerB.classList.remove(turn_class);
@@ -527,9 +544,15 @@ btnNew.addEventListener("click", () => {
     sessionStorage.setItem("nim_collinearity", v);
     collinearity = parseInt(v);
 
+    v = divPlayers.querySelector("[name=who-to-play]:checked").getAttribute("value");
+    sessionStorage.setItem("nim_starting_player", v);
+
     // collapse the settings div
     const bsCollapse = bootstrap.Collapse.getInstance("#new-game");
     bsCollapse.hide();
+    const divGrid = bootstrap.Collapse.getInstance("#gridId");
+    divGrid.show();
+
     refresh_grid();
 });
 
@@ -588,6 +611,17 @@ playerBName.oninput = function () {
     sessionStorage.setItem("nim_B", playerBName.value);
 };
 
+radioAToPlay.addEventListener("click", () => {
+    playerA.classList.add(turn_class);
+    playerB.classList.remove(turn_class);
+});
+
+radioBToPlay.addEventListener("click", () => {
+    playerA.classList.remove(turn_class);
+    playerB.classList.add(turn_class);
+});
+
+
 
 /*
 =========================================================================
@@ -611,6 +645,7 @@ var collinearity;
 var collinear_points;
 var last_border_cell_selected;
 var collinear_line;
+var starting_player;
 
 theme = sessionStorage.getItem("theme");
 if (theme == null) {

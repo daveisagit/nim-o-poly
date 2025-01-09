@@ -80,12 +80,12 @@
         <!-- New Game / Settings -->
 
         <div class="py-3 collapse" id="new-game">
-            <h3>Player Names</h3>
+            <h3>Players</h3>
             <div class="">
                 <form>
                     <div class="form-group d-flex justify-content-center">
 
-                        <div class="w-auto">
+                        <div class="w-auto" id="divPlayers">
 
                             <div class="input-group pb-2">
                                 <div class="input-group-prepend">
@@ -93,6 +93,10 @@
                                 </div>
                                 <input type="text" class="form-control" id="playerAName" aria-describedby="playerAHelp"
                                     placeholder="optional">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="radio" name="who-to-play" value="A"
+                                        id="AToPlay" checked>
+                                </div>
                             </div>
 
                             <div class="input-group">
@@ -101,6 +105,10 @@
                                 </div>
                                 <input type="text" class="form-control" id="playerBName" aria-describedby="playerBHelp"
                                     placeholder="optional">
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="radio" name="who-to-play" value="B"
+                                        id="BToPlay">
+                                </div>
                             </div>
 
                         </div>
@@ -108,20 +116,23 @@
                     </div>
                 </form>
             </div>
+            <i class="pt-1">and who will start</i>
 
-            <h3 class="pt-4">Start a new game</h3>
-            <p>Select the polyomino shape <span
+            <h3 class="pt-4">Shape</h3>
+            <p>Select the polyomino shape (toggle between square and hexagon)</p>
+            <!-- <p>Select the polyomino shape <span
                     class="align-middle material-symbols-outlined interests__icon">square</span>
                 <span class="align-middle">/</span>
                 <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
-            </p>
+            </p> -->
             <button type="button" class="btn" id="btnShape" title="Shape type">
                 <span class="material-symbols-outlined interests__icon h1" id="lblShape">hexagon</span>
             </button>
 
+            <h3 class="pt-4">Collinearity</h3>
             <div class="">
                 <p>Set the limit for the maximum number of collinear cells allowed.
-                    <br>The default of 3 is good place to start.
+                    <br>The default of 3 is a good place to start.
                 </p>
                 <div class="d-flex justify-content-center m-4" id="collinearChoice">
                     <input type="radio" class="btn-check" name="collinear-options" id="co3" autocomplete="off" value="3"
@@ -142,6 +153,10 @@
             <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
                 <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
             </button>
+
+            <div class="">
+                <h3 class="pt-4">Reset scores</h3>
+            </div>
 
         </div>
 
@@ -192,7 +207,7 @@
         </div>
 
         <!-- Render the grid layout in this div-->
-        <div id="gridId"></div>
+        <div class="collapse" id="gridId"></div>
 
     </div>
 
