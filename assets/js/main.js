@@ -13,6 +13,8 @@ const btnTheme = document.getElementById("btnTheme");
 const btnThemeText = document.getElementById("btnThemeText");
 const playerA = document.getElementById("playerA");
 const playerB = document.getElementById("playerB");
+const lblScoreA = document.getElementById("lblScoreA");
+const lblScoreB = document.getElementById("lblScoreB");
 const divGrid = document.getElementById("gridId");
 const lblSize = document.getElementById("sizeId");
 const header_row = document.getElementById("headerRow");
@@ -26,7 +28,11 @@ const collinearChoices = document.getElementById("collinearChoice");
 const radioAToPlay = document.getElementById("AToPlay");
 const radioBToPlay = document.getElementById("BToPlay");
 const divPlayers = document.getElementById("divPlayers");
-
+const lblWinner = document.getElementById("lblWinner");
+const lblWinnersName = document.getElementById("lblWinnersName");
+const winnerModal = document.getElementById("winnerModal");
+const btnAcceptResult = document.getElementById("btnAcceptResult");
+const btnResetScores = document.getElementById("btnResetScores");
 
 const welcomeModal = document.getElementById("welcomeModal");
 
@@ -60,9 +66,11 @@ function get_session() {
 
     var s;
 
+    // Playing order
     s = sessionStorage.getItem("nim_player_order");
     if (s != null) player_order = s;
 
+    // Player Names
     var pa = sessionStorage.getItem("nim_A");
     if (pa == null) pa = "";
     lblPlayerAName.textContent = pa;
@@ -73,6 +81,7 @@ function get_session() {
     lblPlayerBName.textContent = pb;
     playerBName.value = pb;
 
+    // Shape
     if (shape == null) {
         shape = "hexagon";
         s = sessionStorage.getItem("nim_shape");
@@ -80,6 +89,7 @@ function get_session() {
     }
     lblShape.textContent = shape;
 
+    // Collinearity
     if (collinearity == null) {
         collinearity = 3;
         s = sessionStorage.getItem("nim_collinearity");
@@ -89,6 +99,25 @@ function get_session() {
         }
     }
 
+    // Game scores
+    if (score_games == null) {
+        score_games = { "A": 0, "B": 0 };
+        s = sessionStorage.getItem("nim_score_games");
+        if (s != null) {
+            score_games = JSON.parse(s);
+        }
+    }
+
+    // Point scores from stakes variation
+    if (score_points == null) {
+        score_points = { "A": 0, "B": 0 };
+        s = sessionStorage.getItem("nim_score_points");
+        if (s != null) {
+            score_points = JSON.parse(s);
+        }
+    }
+
+    // Show new game options if not in progress
     if (player_order != null) {
         const bsGrid = new bootstrap.Collapse("#gridId");
         bsGrid.show();
@@ -150,11 +179,30 @@ function update_grid() {
 
     // and invalid cells
     invalid_cells = new Set();
+    var no_valid_cells = true;
     for (const d of border) {
         var cp = find_collinear(d);
-        if (cp == null) continue;
+        if (cp == null) {
+            no_valid_cells = false;
+            continue;
+        }
         invalid_cells.add(d);
     }
+
+    // we have a winner
+    if (no_valid_cells) {
+        var winner = player_order[(undo_index) % 2];
+        lblWinner.textContent = winner;
+        if (winner == "A") {
+            lblWinnersName.textContent = lblPlayerAName.textContent;
+        } else {
+            lblWinnersName.textContent = lblPlayerBName.textContent;
+        }
+        var modal = new bootstrap.Modal(winnerModal);
+        modal.show();
+    }
+
+
 
     var update;
     update = g_border.selectAll("polygon").data(Array.from(border), (d) => { return d; });
@@ -316,6 +364,7 @@ function update_grid() {
         });
 
     collinear_points = null;
+
 }
 
 
@@ -384,10 +433,20 @@ function set_header() {
     if (player_order[(undo_index + 1) % 2] == "A") {
         playerA.classList.add(turn_class);
         playerB.classList.remove(turn_class);
+        radioAToPlay.checked = true;
     } else {
         playerA.classList.remove(turn_class);
         playerB.classList.add(turn_class);
+        radioBToPlay.checked = true;
     }
+
+    lblScoreA.innerText = "";
+    lblScoreB.innerText = "";
+    if (score_games.A > 0 || score_games.B > 0) {
+        lblScoreA.innerText = score_games.A;
+        lblScoreB.innerText = score_games.B;
+    }
+
     if (undo_index == instructions.length) {
         lblSize.textContent = set_of_points.size;
     } else {
@@ -554,9 +613,9 @@ btnNew.addEventListener("click", () => {
 });
 
 
-// /*
-// Undo
-// */
+/*
+Undo
+*/
 undoButton.addEventListener("click", () => {
     if (undo_index > 1) {
         undo_index -= 1;
@@ -568,9 +627,9 @@ undoButton.addEventListener("click", () => {
 });
 
 
-// /*
-// Redo
-// */
+/*
+Redo
+*/
 redoButton.addEventListener("click", () => {
     if (undo_index < instructions.length) {
         undo_index += 1;
@@ -579,6 +638,35 @@ redoButton.addEventListener("click", () => {
         last_border_cell_selected = null;
         refresh_grid();
     }
+});
+
+/*
+Accept result
+*/
+btnAcceptResult.addEventListener("click", () => {
+    var winner = player_order[(undo_index) % 2];
+    score_games[winner] += 1;
+    sessionStorage.setItem("nim_score_games", JSON.stringify(score_games));
+    sessionStorage.removeItem("nim_instructions");
+    sessionStorage.removeItem("nim_undo_index");
+    instructions = null;
+    undo_index = null;
+    if (player_order == "AB") {
+        player_order = "BA";
+    } else {
+        player_order = "AB";
+    }
+    refresh_grid();
+});
+
+/*
+Reset Scores
+*/
+btnResetScores.addEventListener("click", () => {
+    score_games = null;
+    score_points = null;
+    sessionStorage.removeItem("nim_score_games");
+    set_header();
 });
 
 // /*
@@ -645,6 +733,8 @@ var collinear_points;
 var last_border_cell_selected;
 var collinear_line;
 var player_order;
+var score_games;
+var score_points;
 
 theme = sessionStorage.getItem("theme");
 if (theme == null) {

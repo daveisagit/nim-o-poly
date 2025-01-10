@@ -34,13 +34,17 @@
 
             <div class="pt-2 d-flex flex-row justify-content-between">
                 <div class="text-start">
-                    <h1 class="text-center rounded-4 px-3" id="playerA">A</h1>
+                    <h1 class="text-center rounded-4 px-3 d-inline" id="playerA">A</h1>
+                    <div class="px-2 d-inline"></div>
+                    <h4 class=" d-inline"><span class="badge bg-secondary" id="lblScoreA">2</span></h4>
                 </div>
                 <div class="text-center">
                     <h1 class="bamboo">Nim-o-Poly</h1>
                 </div>
                 <div class="text-end">
-                    <h1 class="text-center rounded-4 px-3" id="playerB">B</h1>
+                    <h4 class="d-inline"><span class="badge bg-secondary" id="lblScoreB">2</span></h4>
+                    <div class="px-2 d-inline"></div>
+                    <h1 class="text-center rounded-4 px-3 d-inline" id="playerB">B</h1>
                 </div>
             </div>
             <div class="px-2 d-flex flex-row justify-content-between">
@@ -156,6 +160,7 @@
 
             <div class="">
                 <h3 class="pt-4">Reset scores</h3>
+                <button type="button" class="btn btn-primary" id="btnResetScores">Reset</button>
             </div>
 
         </div>
@@ -184,7 +189,8 @@
                             <br>The target may increase during play as follows.
                         </p>
 
-                        <p>On their turn a player may have the option to increase the target by 1 before laying a new
+                        <p>On their turn a player may have the option to increase the target by 1 before laying a
+                            new
                             cell.
                         </p>
                         <p>The right to be able to do so, is like using the doubling dice in backgammon.
@@ -209,6 +215,26 @@
         <!-- Render the grid layout in this div-->
         <div class="collapse" id="gridId"></div>
 
+    </div>
+
+
+    <!-- Winner Modal -->
+    <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h1 class="bamboo">Game Over</h1>
+                    <h3><span class="h1" id="lblWinner"></span> wins</h3>
+                    <h1>🏅</h1>
+                    <h5>Well played <span id="lblWinnersName"></span></h5>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                        id="btnAcceptResult">Ok</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No! Go Back</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Welcome Modal -->
