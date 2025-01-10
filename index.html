@@ -135,9 +135,7 @@
 
             <h3 class="pt-4">Collinearity</h3>
             <div class="">
-                <p>Set the limit for the maximum number of collinear cells allowed.
-                    <br>The default of 3 is a good place to start.
-                </p>
+                <p>Set the limit for the maximum number of collinear cells allowed.</p>
                 <div class="d-flex justify-content-center m-4" id="collinearChoice">
                     <input type="radio" class="btn-check" name="collinear-options" id="co3" autocomplete="off" value="3"
                         checked>
@@ -150,8 +148,6 @@
                     <label class="btn mx-2" for="co5">5</label>
                 </div>
             </div>
-
-
 
             <p>Click play to start a new game with these settings</p>
             <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
@@ -217,6 +213,26 @@
 
     </div>
 
+    <!-- Undo Modal -->
+    <div class="modal fade" id="undoModal" tabindex="-1" aria-labelledby="undoModalLabel" aria-hidden="true">
+        <input type="hidden" value="" id="inpUndo">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h1 class="bamboo">Undo</h1>
+                    <h1>😲🤨🤔</h1>
+                    <p class="h5">Do you want to re-write history ?</p>
+                    <p class="h5">Does your opponent agree ?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                        id="btnAcceptUndo">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Winner Modal -->
     <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true">
@@ -224,6 +240,8 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <h1 class="bamboo">Game Over</h1>
+                    <div class="h4"><span class="badge bg-secondary" id="lblCellsPlayed"></span></div>
+                    <p class="ml-4"> cells</p>
                     <h3><span class="h1" id="lblWinner"></span> wins</h3>
                     <h1>🏅</h1>
                     <h5>Well played <span id="lblWinnersName"></span></h5>

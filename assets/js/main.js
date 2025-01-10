@@ -31,8 +31,11 @@ const lblWinner = document.getElementById("lblWinner");
 const lblWinnersName = document.getElementById("lblWinnersName");
 const winnerModal = document.getElementById("winnerModal");
 const btnAcceptResult = document.getElementById("btnAcceptResult");
+const lblCellsPlayed = document.getElementById("lblCellsPlayed");
 const btnResetScores = document.getElementById("btnResetScores");
-
+const undoModal = document.getElementById("undoModal");
+const inpUndo = document.getElementById("inpUndo");
+const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
 
 const turn_class = "player-to-play";
@@ -146,6 +149,14 @@ function set_points() {
     }
 }
 
+function add_cell(d) {
+    instructions.length = undo_index;
+    instructions.push(["+", JSON.parse(d)]);
+    set_of_points.add(d);
+    undo_index += 1;
+    sessionStorage.setItem("nim_instructions", JSON.stringify(instructions));
+    sessionStorage.setItem("nim_undo_index", undo_index);
+}
 
 function update_grid() {
 
@@ -173,6 +184,7 @@ function update_grid() {
         } else {
             lblWinnersName.textContent = lblPlayerBName.textContent;
         }
+        lblCellsPlayed.textContent = undo_index;
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
     }
@@ -205,13 +217,14 @@ function update_grid() {
                 if (collinear_points == null) {
 
                     if (instructions.length == undo_index) {
-                        // only allow a move if its the latest
-                        instructions.length = undo_index;
-                        instructions.push(["+", JSON.parse(d)]);
-                        set_of_points.add(d);
-                        undo_index += 1;
-                        sessionStorage.setItem("nim_instructions", JSON.stringify(instructions));
-                        sessionStorage.setItem("nim_undo_index", undo_index);
+                        // allow a move if its the latest
+                        add_cell(d);
+                    } else {
+                        // otherwise confirm an undo
+                        last_border_cell_selected = null;
+                        inpUndo.value = d;
+                        var modal = new bootstrap.Modal(undoModal);
+                        modal.show();
                     }
 
                 } else {
@@ -266,7 +279,7 @@ function update_grid() {
                 return to_play(d);
             })
             .attr("opacity", 1)
-            .transition().duration(1500)
+            .transition().duration(3500)
             .attr("opacity", d => {
                 if (undo_index == instructions.length) return 0; else return 1;
             }),
@@ -391,6 +404,10 @@ function set_header() {
     if (score_games.A > 0 || score_games.B > 0) {
         lblScoreA.innerText = score_games.A;
         lblScoreB.innerText = score_games.B;
+    }
+    if (score_games.A > 0 || score_games.B > 0) {
+        lblScoreA.innerText = score_points.A;
+        lblScoreB.innerText = score_points.B;
     }
 
     if (undo_index == instructions.length) {
@@ -593,15 +610,19 @@ btnAcceptResult.addEventListener("click", () => {
     var winner = player_order[(undo_index) % 2];
     score_games[winner] += 1;
     sessionStorage.setItem("nim_score_games", JSON.stringify(score_games));
-    sessionStorage.removeItem("nim_instructions");
-    sessionStorage.removeItem("nim_undo_index");
-    instructions = null;
-    undo_index = null;
+
+    score_points[winner] += parseInt(lblCellsPlayed.textContent);
+    sessionStorage.setItem("nim_score_points", JSON.stringify(score_points));
+
     if (player_order == "AB") {
         player_order = "BA";
+        radioBToPlay.checked = true;
     } else {
         player_order = "AB";
+        radioAToPlay.checked = true;
     }
+    sessionStorage.setItem("nim_player_order", player_order);
+    new_game();
     refresh_grid();
 });
 
@@ -641,7 +662,13 @@ radioBToPlay.addEventListener("click", () => {
     playerB.classList.add(turn_class);
 });
 
-
+/*
+Accept Undo
+*/
+btnAcceptUndo.addEventListener("click", () => {
+    add_cell(inpUndo.value);
+    refresh_ui();
+});
 
 /*
 =========================================================================
