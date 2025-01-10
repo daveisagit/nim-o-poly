@@ -663,9 +663,10 @@ btnAcceptResult.addEventListener("click", () => {
 Reset Scores
 */
 btnResetScores.addEventListener("click", () => {
-    score_games = null;
-    score_points = null;
+    score_games = { "A": 0, "B": 0 };
+    score_points = { "A": 0, "B": 0 };
     sessionStorage.removeItem("nim_score_games");
+    sessionStorage.removeItem("nim_score_points");
     set_header();
 });
 
