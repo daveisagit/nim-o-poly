@@ -34,7 +34,7 @@
 
             <div class="pt-2 d-flex flex-row justify-content-between">
                 <div class="text-start">
-                    <h2 class="text-center rounded-4 px-3 d-inline" id="playerA">A</h2>
+                    <h2 class="text-center rounded-4 px-2 d-inline" id="playerA">A</h2>
                     <div class="pl-1 d-inline"></div>
                     <h5 class=" d-inline"><span class="badge bg-secondary" id="lblScoreA"></span></h5>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="text-end">
                     <h5 class="d-inline"><span class="badge bg-secondary" id="lblScoreB"></span></h5>
                     <div class="pr-1 d-inline"></div>
-                    <h2 class="text-center rounded-4 px-3 d-inline" id="playerB">B</h2>
+                    <h2 class="text-center rounded-4 px-2 d-inline" id="playerB">B</h2>
                 </div>
             </div>
             <div class="px-2 d-flex flex-row justify-content-between">
@@ -84,7 +84,10 @@
         <!-- New Game / Settings -->
 
         <div class="py-3 collapse" id="new-game">
-            <h3>Players</h3>
+
+            <button type="button" class="btn btn-primary" id="btnResetScores">Reset Scores</button>
+
+            <h3 class="pt-4">Players</h3>
             <div class="">
                 <form>
                     <div class="form-group d-flex justify-content-center">
@@ -120,7 +123,7 @@
                     </div>
                 </form>
             </div>
-            <i class="pt-1">and who will start</i>
+            <i class="pt-1">and who will start the next game</i>
 
             <h3 class="pt-4">Shape</h3>
             <p>Select the polyomino shape (toggle between square and hexagon)</p>
@@ -153,11 +156,6 @@
             <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
                 <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
             </button>
-
-            <div class="">
-                <h3 class="pt-4">Reset scores</h3>
-                <button type="button" class="btn btn-primary" id="btnResetScores">Reset</button>
-            </div>
 
         </div>
 
