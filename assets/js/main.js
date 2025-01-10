@@ -1,6 +1,5 @@
 import * as poly from "./poly.js";
 import * as mtx from "./matrix.js";
-import { UnionFind } from "./union_find.js"
 
 /*
 DOM elements
@@ -37,30 +36,6 @@ const btnResetScores = document.getElementById("btnResetScores");
 const welcomeModal = document.getElementById("welcomeModal");
 
 const turn_class = "player-to-play";
-
-// function set_shape() {
-//     // Get in shape
-//     if (shape == null) {
-//         shape = "hex";
-//         var s = sessionStorage.getItem("nim_shape");
-//         if (s != null) shape = s;
-//     }
-//     if (shape == "squ") {
-//         lblShape.textContent = "square";
-//     } else {
-//         lblShape.textContent = "hexagon";
-//     }
-// }
-
-// function set_collinearity() {
-//     if (collinearity == null) {
-//         collinearity = 3;
-//         var s = sessionStorage.getItem(`${shape}_collinearity`);
-//         if (s != null) collinearity = parseInt(s);
-//     }
-//     maxCollinear.textContent = collinearity.toString();
-//     document.getElementById(`co${collinearity}`).checked = true;
-// }
 
 function get_session() {
 
@@ -209,11 +184,6 @@ function update_grid() {
     update.join("polygon")
         .classed("invalid", d => {
             return invalid_cells.has(d);
-            // var cp = find_collinear(d);
-            // if (cp == null) {
-            //     return false;
-            // }
-            // return true;
         })
         .classed("collinear", d => {
             if (collinear_points == null) return false;
@@ -273,32 +243,10 @@ function update_grid() {
             return shape_class.polygon_corners(layout, ad).map(p => `${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(" ")
         });
 
-    // Code from playominoes that handles selecting cell removal
-
-    // .on("click", (e, d) => {
-    //     last_border_cell_selected = null;
-    //     if (cell_can_be_removed(d)) {
-    //         instructions.length = undo_index;
-    //         instructions.push(["-", JSON.parse(d)]);
-    //         set_of_points.delete(d);
-    //         undo_index += 1;
-    //         sessionStorage.setItem(`${shape}_instructions`, JSON.stringify(instructions));
-    //         sessionStorage.setItem(`${shape}_undo_index`, undo_index);
-    //     } else {
-    //         d3.select(e.currentTarget)
-    //             .attr("fill", "firebrick")
-    //             .transition().duration(1200)
-    //             .attr("fill", cell_fill);
-    //     }
-    //     refresh_ui();
-    // });
 
     // add the central dot
     update = g_cells.selectAll("circle").data(Array.from(set_of_points), (d) => { return d; });
     update.join("circle")
-        // update.join(
-        //     enter => enter.append("circle").attr("r", cell_size / 2).transition().duration(500).attr("r", cell_size / 10)
-        // )
         .attr("r", cell_size / 10)
         .attr("cx", d => {
             const ad = JSON.parse(d);
@@ -310,7 +258,7 @@ function update_grid() {
         });
 
 
-    // add the central dot
+    // add text for who played the cell
     update = g_cells.selectAll("text").data(Array.from(set_of_points), (d) => { return d; });
     update.join(
         enter => enter.append("text")
@@ -332,8 +280,6 @@ function update_grid() {
         .attr("dy", "-1em")
         .attr("font-size", "50%")
         .attr("stroke-width", "0.1")
-        // .attr("fill", "green")
-        // .attr("stroke", "green")
         .attr("x", d => {
             const ad = JSON.parse(d);
             return shape_class.to_pixel(layout, ad).x.toFixed(0)
@@ -670,25 +616,9 @@ btnResetScores.addEventListener("click", () => {
     set_header();
 });
 
-// /*
-// Collinearity
-// */
-// setCollinearityButton.addEventListener("click", () => {
-//     var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
-//     var modal = bootstrap.Modal.getInstance(collinearModal)
-//     modal.hide();
-
-//     sessionStorage.setItem(`${shape}_collinearity`, v);
-//     collinearity = null;
-//     set_collinearity();
-
-//     collinear_points = null;
-//     last_border_cell_selected = null;
-
-//     refresh_grid();
-// });
-
-
+/*
+Name entry
+*/
 playerAName.oninput = function () {
     lblPlayerAName.textContent = playerAName.value;
     sessionStorage.setItem("nim_A", playerAName.value);
@@ -698,6 +628,9 @@ playerBName.oninput = function () {
     sessionStorage.setItem("nim_B", playerBName.value);
 };
 
+/*
+Who's to play
+*/
 radioAToPlay.addEventListener("click", () => {
     playerA.classList.add(turn_class);
     playerB.classList.remove(turn_class);
@@ -742,7 +675,6 @@ if (theme == null) {
     theme = "dark";
 }
 set_theme();
-// set_shape();
 get_session();
 
 /*
@@ -763,9 +695,9 @@ var svg = d3.select("svg"),
 !! Go !!
 */
 
-var seenWelcome = localStorage.getItem("seenWelcome");
+var seenWelcome = localStorage.getItem("nim_welcome");
 if (seenWelcome == null) {
-    localStorage.setItem("seenWelcome", true);
+    localStorage.setItem("nim_welcome", true);
     var modal = new bootstrap.Modal(welcomeModal);
     modal.show();
 }
