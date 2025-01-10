@@ -60,8 +60,8 @@ function get_session() {
 
     var s;
 
-    s = sessionStorage.getItem("nim_starting_player");
-    if (s != null) starting_player = s;
+    s = sessionStorage.getItem("nim_player_order");
+    if (s != null) player_order = s;
 
     var pa = sessionStorage.getItem("nim_A");
     if (pa == null) pa = "";
@@ -73,12 +73,23 @@ function get_session() {
     lblPlayerBName.textContent = pb;
     playerBName.value = pb;
 
-    s = sessionStorage.getItem("nim_collinearity");
-    if (s != null) {
-        document.getElementById(`co${s}`).checked = true;
+    if (shape == null) {
+        shape = "hexagon";
+        s = sessionStorage.getItem("nim_shape");
+        if (s != null) shape = s;
+    }
+    lblShape.textContent = shape;
+
+    if (collinearity == null) {
+        collinearity = 3;
+        s = sessionStorage.getItem("nim_collinearity");
+        if (s != null) {
+            document.getElementById(`co${s}`).checked = true;
+            collinearity = parseInt(s);
+        }
     }
 
-    if (starting_player != null) {
+    if (player_order != null) {
         const bsGrid = new bootstrap.Collapse("#gridId");
         bsGrid.show();
     } else {
@@ -134,19 +145,27 @@ function set_points() {
 
 function update_grid() {
 
-    var update;
-
     // generate the border
     border = shape_class.border(set_of_points);
 
+    // and invalid cells
+    invalid_cells = new Set();
+    for (const d of border) {
+        var cp = find_collinear(d);
+        if (cp == null) continue;
+        invalid_cells.add(d);
+    }
+
+    var update;
     update = g_border.selectAll("polygon").data(Array.from(border), (d) => { return d; });
     update.join("polygon")
         .classed("invalid", d => {
-            var cp = find_collinear(d);
-            if (cp == null) {
-                return false;
-            }
-            return true;
+            return invalid_cells.has(d);
+            // var cp = find_collinear(d);
+            // if (cp == null) {
+            //     return false;
+            // }
+            // return true;
         })
         .classed("collinear", d => {
             if (collinear_points == null) return false;
@@ -358,11 +377,11 @@ function to_play(d) {
         idx += 1;
     }
     if (idx == 0) return "";
-    if (idx % 2 == 1) return "A"; else return "B";
+    return player_order[(idx + 1) % 2];
 }
 
 function set_header() {
-    if (undo_index % 2 == 1) {
+    if (player_order[(undo_index + 1) % 2] == "A") {
         playerA.classList.add(turn_class);
         playerB.classList.remove(turn_class);
     } else {
@@ -465,32 +484,28 @@ function set_collinear_line() {
     }
 }
 
-function cell_can_be_removed(p) {
-    if (set_of_points.size <= 1) return false;
+function new_game() {
 
-    var arr_of_cells = {};
-    var idx = 0;
-    for (const c of set_of_points) {
-        if (c == p) continue;
-        arr_of_cells[c] = idx;
-        idx += 1;
-    }
+    // clear the grid
+    sessionStorage.removeItem("nim_instructions");
+    sessionStorage.removeItem("nim_undo_index");
+    instructions = null;
+    undo_index = null;
 
-    const uf = new UnionFind(set_of_points.size - 1);
-    for (const c in arr_of_cells) {
-        if (c == p) continue;
-        var ci = arr_of_cells[c];
-        var ca = JSON.parse(c);
-        for (const n of shape_class.neighbours(ca)) {
-            var ns = JSON.stringify(n);
-            if (ns in arr_of_cells) {
-                var ni = arr_of_cells[ns];
-                uf.union(ci, ni);
-            }
-        }
-    }
-    var r = uf.count() == 1
-    return r;
+    // set the shape
+    shape = lblShape.textContent
+    sessionStorage.setItem("nim_shape", shape);
+
+    // set the collinearity
+    var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
+    sessionStorage.setItem("nim_collinearity", v);
+    collinearity = parseInt(v);
+
+    v = divPlayers.querySelector("[name=who-to-play]:checked").getAttribute("value");
+    if (v == "A") v = "AB"; else v = "BA"
+    sessionStorage.setItem("nim_player_order", v);
+    player_order = v;
+
 }
 
 /*
@@ -526,25 +541,6 @@ btnShape.addEventListener("click", () => {
 New Game
 */
 btnNew.addEventListener("click", () => {
-
-    // clear the grid
-    sessionStorage.removeItem("nim_instructions");
-    sessionStorage.removeItem("nim_undo_index");
-    instructions = null;
-    undo_index = null;
-
-    // set the shape
-    shape = lblShape.textContent
-    sessionStorage.setItem("nim_shape", shape);
-
-    // set the collinearity
-    var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
-    sessionStorage.setItem("nim_collinearity", v);
-    collinearity = parseInt(v);
-
-    v = divPlayers.querySelector("[name=who-to-play]:checked").getAttribute("value");
-    sessionStorage.setItem("nim_starting_player", v);
-
     // collapse the settings div
     const bsCollapse = bootstrap.Collapse.getInstance("#new-game");
     bsCollapse.hide();
@@ -553,9 +549,10 @@ btnNew.addEventListener("click", () => {
         divGrid = new bootstrap.Collapse("#gridId");
     }
     divGrid.show();
-
+    new_game();
     refresh_grid();
 });
+
 
 // /*
 // Undo
@@ -635,6 +632,7 @@ const cell_size = 20;
 var instructions;
 var set_of_points;
 var border;
+var invalid_cells;
 var theme;
 var undo_index = 0;
 var shape;
@@ -646,7 +644,7 @@ var collinearity;
 var collinear_points;
 var last_border_cell_selected;
 var collinear_line;
-var starting_player;
+var player_order;
 
 theme = sessionStorage.getItem("theme");
 if (theme == null) {
