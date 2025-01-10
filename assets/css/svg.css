@@ -74,17 +74,11 @@ phones/tablets
     }
 }
 
-
 line {
     stroke: var(--line-stroke);
     stroke-width: var(--line-stroke-width);
     stroke-linecap: round;
 }
-
-.player-to-play {
-    background-color: darkseagreen;
-}
-
 
 /* Dark Mode for outline and dot */
 div.dark .cell>polygon {

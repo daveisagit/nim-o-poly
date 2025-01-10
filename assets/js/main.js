@@ -37,8 +37,17 @@ const undoModal = document.getElementById("undoModal");
 const inpUndo = document.getElementById("inpUndo");
 const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
+const chkSeparateColours = document.getElementById("chkSeparateColours");
 
-const turn_class = "player-to-play";
+function set_cell_fill() {
+    cell_fill_a = cell_fill_1;
+    cell_fill_b = cell_fill_1;
+    cell_fill_start = cell_fill_1;
+    if (chkSeparateColours.checked) {
+        cell_fill_b = cell_fill_2;
+        cell_fill_start = "gray";
+    }
+}
 
 function get_session() {
 
@@ -58,6 +67,14 @@ function get_session() {
     if (pb == null) pb = "";
     lblPlayerBName.textContent = pb;
     playerBName.value = pb;
+
+    // Separate Colours
+    s = sessionStorage.getItem("nim_separate_colours");
+    if (s == "true") {
+        chkSeparateColours.checked = true;
+    } else {
+        chkSeparateColours.checked = false;
+    }
 
     // Shape
     if (shape == null) {
@@ -242,8 +259,19 @@ function update_grid() {
             .attr("fill", "green")
             .attr("fill-opacity", 0.2)
             .transition().duration(600)
-            .attr("fill", cell_fill)
-            .attr("fill-opacity", 1)
+            .attr("fill", d => {
+                const ply = to_play(d);
+                if (ply == "A") return cell_fill_a;
+                if (ply == "B") return cell_fill_b;
+                return cell_fill_start;
+            })
+            .attr("fill-opacity", 1),
+        update => update.attr("fill", d => {
+            const ply = to_play(d);
+            if (ply == "A") return cell_fill_a;
+            if (ply == "B") return cell_fill_b;
+            return cell_fill_start;
+        })
     )
         .classed("collinear", d => {
             if (collinear_points == null) return false;
@@ -390,13 +418,13 @@ function to_play(d) {
 
 function set_header() {
     if (player_order[(undo_index + 1) % 2] == "A") {
-        playerA.classList.add(turn_class);
-        playerB.classList.remove(turn_class);
         radioAToPlay.checked = true;
+        playerA.setAttribute("style", `background-color: ${cell_fill_a};`)
+        playerB.removeAttribute("style");
     } else {
-        playerA.classList.remove(turn_class);
-        playerB.classList.add(turn_class);
         radioBToPlay.checked = true;
+        playerA.removeAttribute("style");
+        playerB.setAttribute("style", `background-color: ${cell_fill_b};`)
     }
 
     lblScoreA.innerText = "";
@@ -423,6 +451,7 @@ function refresh_grid() {
     set_layout();
     set_shape_class();
     get_instructions();
+    set_cell_fill();
     set_points();
     refresh_ui();
 }
@@ -536,9 +565,19 @@ Button Events
 =========================================================================
 */
 
-// /*
-// Dark Mode theme
-// */
+/*
+Separate Colours
+*/
+chkSeparateColours.addEventListener("click", () => {
+    sessionStorage.setItem("nim_separate_colours", chkSeparateColours.checked);
+    set_cell_fill();
+    refresh_grid();
+});
+
+
+/*
+Dark Mode theme
+*/
 btnTheme.addEventListener("click", () => {
     if (theme == "light") {
         theme = "dark";
@@ -653,14 +692,16 @@ playerBName.oninput = function () {
 Who's to play
 */
 radioAToPlay.addEventListener("click", () => {
-    playerA.classList.add(turn_class);
-    playerB.classList.remove(turn_class);
+    playerA.setAttribute("style", `background-color: ${cell_fill_a};`)
+    playerB.removeAttribute("style");
 });
 
 radioBToPlay.addEventListener("click", () => {
-    playerA.classList.remove(turn_class);
-    playerB.classList.add(turn_class);
+    playerA.removeAttribute("style");
+    playerB.setAttribute("style", `background-color: ${cell_fill_b};`)
 });
+
+
 
 /*
 Accept Undo
@@ -676,7 +717,8 @@ MAIN Script
 =========================================================================
 */
 
-const cell_fill = "steelblue";
+const cell_fill_1 = "steelblue";
+const cell_fill_2 = "CadetBlue";
 const cell_size = 20;
 var instructions;
 var set_of_points;
@@ -696,6 +738,9 @@ var collinear_line;
 var player_order;
 var score_games;
 var score_points;
+var cell_fill_a;
+var cell_fill_b;
+var cell_fill_start;
 
 theme = sessionStorage.getItem("theme");
 if (theme == null) {

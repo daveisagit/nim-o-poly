@@ -36,13 +36,13 @@
                 <div class="text-start">
                     <h2 class="text-center rounded-4 px-2 d-inline" id="playerA">A</h2>
                     <div class="pl-1 d-inline"></div>
-                    <h5 class=" d-inline"><span class="badge bg-secondary" id="lblScoreA"></span></h5>
+                    <div class=" d-inline"><span class="badge bg-secondary" id="lblScoreA"></span></div>
                 </div>
                 <div class="text-center">
                     <h2 class="bamboo">Nim-o-Poly</h2>
                 </div>
                 <div class="text-end">
-                    <h5 class="d-inline"><span class="badge bg-secondary" id="lblScoreB"></span></h5>
+                    <div class="d-inline"><span class="badge bg-secondary" id="lblScoreB"></span></div>
                     <div class="pr-1 d-inline"></div>
                     <h2 class="text-center rounded-4 px-2 d-inline" id="playerB">B</h2>
                 </div>
@@ -123,7 +123,16 @@
                     </div>
                 </form>
             </div>
-            <i class="pt-1">and who will start the next game</i>
+            <i class="pt-1">select who starts the next game</i>
+
+            <div class="form-group d-flex justify-content-center">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="chkSeparateColours">
+                    <label class="form-check-label" for="chkSeparateColours">Separate colours</label>
+                </div>
+            </div>
+
+
 
             <h3 class="pt-4">Shape</h3>
             <p>Select the polyomino shape (toggle between square and hexagon)</p>
@@ -132,8 +141,8 @@
                 <span class="align-middle">/</span>
                 <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
             </p> -->
-            <button type="button" class="btn" id="btnShape" title="Shape type">
-                <span class="material-symbols-outlined interests__icon h1" id="lblShape">hexagon</span>
+            <button type="button" class="btn btn-secondary" id="btnShape" title="Shape type">
+                <span class="material-symbols-outlined interests__icon h1 mb-0" id="lblShape">hexagon</span>
             </button>
 
             <h3 class="pt-4">Collinearity</h3>
@@ -171,9 +180,76 @@
 
                     <div class="text-start">
                         <h3>Basic Play</h3>
-                        <p>Last player to add a cell wins, if you can't go then you've lost.</p>
 
-                        <h3>Stakes Variation</h3>
+                        <div>
+                            <span class="align-middle">The <a href="https://en.wikipedia.org/wiki/Polyomino"
+                                    target="wiki">Polyomino</a> can be
+                                made up from connected <strong>square</strong> or <strong>hexagonal</strong>
+                                cells</span>
+                            <span class="align-middle material-symbols-outlined interests__icon">square</span>
+                            <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
+                        </div>
+                        Any new cell added during the game must
+                        <ul>
+                            <li>be connected to the current shape, and</li>
+                            <li>not break the collinearity limit</li>
+                        </ul>
+
+                        <p>The <a href="https://en.wikipedia.org/wiki/Collinearity" target="wiki">Collinearity</a>
+                            limit is the maximum number of cells that are allowed to be collinear on any line in the
+                            plane through the cell centres.</p>
+
+                        <p>During the game all connected options are shown for selection, with the valid ones shaded
+                            <span class="text-success">green</span>
+                            <br>and the ones which break the collinearity limit shaded <span
+                                class="text-danger">red</span>
+                        </p>
+                        <p>Selecting an invalid cell will show you why it is invalid.</p>
+
+                        <p>Last player to add a cell wins, i.e. if you can't go then you've lost.</p>
+                        <p>The winner receives a number of points equal to the size of the polyomino finally formed.</p>
+
+                        <div>
+                            <span class="align-middle">The shape and collinearity limit can be set in the game
+                                options</span>
+                            <span class="align-middle material-symbols-outlined interests__icon">sports</span>
+                        </div>
+
+                        <h1 class="my-4 text-center">Game Options <span
+                                class="align-middle material-symbols-outlined interests__icon h1">sports</span></h1>
+
+                        <div class="text-start">
+                            Some things can be changed during play:
+                            <ul>
+                                <li>Resetting the scores.</li>
+                                <li>Changing the player names.</li>
+                            </ul>
+
+                            <div>
+                                <span class="align-middle">Where as these only come into affect upon starting a new
+                                    game.</span>
+                                <span class="align-middle material-symbols-outlined interests__icon">play_circle</span>
+                            </div>
+
+                            <ul>
+                                <li>The cell shape.</li>
+                                <li>Collinearity limit.</li>
+                                <li>Player to start</li>
+                            </ul>
+
+                            <div>
+                                <span class="align-middle">During play you have the options </span>
+                                <span class="align-middle material-symbols-outlined interests__icon">undo</span>
+                                <span class="align-middle material-symbols-outlined interests__icon">redo</span>
+                                <span class="align-middle">to review the game history.</span>
+                            </div>
+                            <p><i>Undo-ing</i> play is allowed, but you will be prompted to confirm that is the intent.
+                            </p>
+
+                        </div>
+
+
+                        <!-- <h3>Stakes Variation</h3>
                         <p>Play stops when the target number of cells is reached (or, if play can't continue).
                             <br>The first player to reach the target wins.
                             <br> If the target is unreachable then as in basic play whoever played last wins.
@@ -192,7 +268,8 @@
                             <br>Subsequently, the right to increase the target by 1 alternates.
                             <br>Unlike backgammon there is no option to decline the increase.
                         </p>
-                        <p>The winners reward is a stake value equal to the target when the game stops.</p>
+                        <p>The winners reward is a stake value equal to the target when the game stops.</p> -->
+
                     </div>
 
 
@@ -259,18 +336,27 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <h1>Hi 🙂</h1>
-                    <h3>Welcome to Poly-Play</h3>
-                    <h3>⚒️</h3>
-                    <h5>A safe place for constructing polyominoes</h5>
-                    <p class="my-4">No nagging doubts 🤔 or piles of screwed up paper 🗑️</p>
-
-                    <div class="my-4">
-                        <span class="align-middle">Click</span>
-                        <span class="align-middle material-symbols-outlined interests__icon"
-                            id="btnThemeText">help</span>
-                        <span class="align-middle">help for more details.</span>
+                    <h3>Welcome to <span class="bamboo">Nim-o-Poly</span></h3>
+                    <span class="material-symbols-outlined interests__icon h1 mb-0">crossword</span>
+                    <h5>A <a href="https://en.wikipedia.org/wiki/Nim" target="wiki">Nim</a>-style game with <a
+                            href="https://en.wikipedia.org/wiki/Polyomino" target="wiki">Polyominoes</a></h5>
+                    <p class="pt-2">In classic Nim you remove matches from piles and try to avoid or take the last
+                        match.</p>
+                    <p>In this variation, you add cells to a Polyomino constrained by <a
+                            href="https://en.wikipedia.org/wiki/Collinearity" target="wiki">Collinearity</a> and try to
+                        place the last possible cell.</p>
+                    <div>
+                        <span class="align-middle h3">🐱</span>
+                        <span class="align-middle h4">Curious?</span>
+                        <span class="align-middle h3">🐱</span>
                     </div>
-                    <p>Or if you prefer, just get stuck in and click stuff.</p>
+                    <div>
+                        <span class="align-middle">See the rules</span>
+                        <span class="align-middle material-symbols-outlined interests__icon">help</span>
+                        <span class="align-middle">for more details.</span>
+                    </div>
+                    <p>Or, just get on learn as you play.</p>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
