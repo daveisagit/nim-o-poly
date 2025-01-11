@@ -38,6 +38,8 @@ const inpUndo = document.getElementById("inpUndo");
 const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
 const chkSeparateColours = document.getElementById("chkSeparateColours");
+const variationChoice = document.getElementById("variationChoice");
+
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -75,6 +77,17 @@ function get_session() {
     } else {
         chkSeparateColours.checked = false;
     }
+
+    // Variation
+    if (variation == null) {
+        variation = "Basic";
+        s = sessionStorage.getItem("nim_variation");
+        if (s != null) {
+            document.getElementById(`variation${s}`).checked = true;
+            variation = s;
+        }
+    }
+    lblShape.textContent = shape;
 
     // Shape
     if (shape == null) {
@@ -152,17 +165,31 @@ function get_instructions() {
     }
 }
 
+function set_my_points() {
+    // create the points set
+    my_points = new Set([JSON.stringify(shape_class.origin)]);
+    for (var i = 0; i < undo_index; i++) {
+        var ins = instructions[i];
+        if ((undo_index - i) % 2 == 0) {
+            my_points.add(JSON.stringify(ins[1]));
+        }
+    }
+}
+
 function set_points() {
     // create the points set
     set_of_points = new Set();
     for (var i = 0; i < undo_index; i++) {
         var ins = instructions[i];
-        if (ins[0] == "+") {
-            set_of_points.add(JSON.stringify(ins[1]));
-        }
-        if (ins[0] == "-") {
-            set_of_points.delete(JSON.stringify(ins[1]));
-        }
+        // if (ins[0] == "+") {
+        //     set_of_points.add(JSON.stringify(ins[1]));
+        // }
+        // if (ins[0] == "-") {
+        //     set_of_points.delete(JSON.stringify(ins[1]));
+        // }
+
+        // we only use + 
+        set_of_points.add(JSON.stringify(ins[1]));
     }
 }
 
@@ -178,7 +205,13 @@ function add_cell(d) {
 function update_grid() {
 
     // generate the border
-    border = shape_class.border(set_of_points);
+    if (variation == "Basic") {
+        border = shape_class.border(set_of_points);
+    } else {
+        set_my_points();
+        border = shape_class.border(my_points, set_of_points);
+    }
+
 
     // and invalid cells
     invalid_cells = new Set();
@@ -211,6 +244,7 @@ function update_grid() {
     var update;
     update = g_border.selectAll("polygon").data(Array.from(border), (d) => { return d; });
     update.join("polygon")
+        // .classed("border", true)
         .classed("invalid", d => {
             return invalid_cells.has(d);
         })
@@ -273,6 +307,7 @@ function update_grid() {
             return cell_fill_start;
         })
     )
+        // .classed("cell", true)
         .classed("collinear", d => {
             if (collinear_points == null) return false;
             if (collinear_points.has(d)) {
@@ -543,6 +578,11 @@ function new_game() {
     instructions = null;
     undo_index = null;
 
+    // set the variation
+    var v = variationChoice.querySelector("[name=variation]:checked").getAttribute("value");
+    sessionStorage.setItem("nim_variation", v);
+    variation = v;
+
     // set the shape
     shape = lblShape.textContent
     sessionStorage.setItem("nim_shape", shape);
@@ -722,10 +762,12 @@ const cell_fill_2 = "peru";
 const cell_size = 20;
 var instructions;
 var set_of_points;
+var my_points;
 var border;
 var invalid_cells;
 var theme;
 var undo_index = 0;
+var variation;
 var shape;
 var layout;
 var wdw_w;
