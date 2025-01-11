@@ -45,7 +45,7 @@ function set_cell_fill() {
     cell_fill_start = cell_fill_1;
     if (chkSeparateColours.checked) {
         cell_fill_b = cell_fill_2;
-        cell_fill_start = "gray";
+        cell_fill_start = "dimgray";
     }
 }
 
@@ -718,7 +718,7 @@ MAIN Script
 */
 
 const cell_fill_1 = "steelblue";
-const cell_fill_2 = "CadetBlue";
+const cell_fill_2 = "peru";
 const cell_size = 20;
 var instructions;
 var set_of_points;
