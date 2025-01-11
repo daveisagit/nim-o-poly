@@ -41,13 +41,16 @@ class Shape {
         }
         return res;
     }
-    border(ps) {
+    border(ps, exclude) {
+        // create a border around ps 
+        // use exclude optionally 
+        if (exclude == null) exclude = ps;
         var bs = new Set();
         for (const s of ps) {
             var p = JSON.parse(s);
             for (const n of this.neighbours(p)) {
                 var b = JSON.stringify(n)
-                if (!ps.has(b)) {
+                if (!exclude.has(b)) {
                     bs.add(b);
                 }
             }

@@ -242,7 +242,7 @@ function update_grid() {
 
 
     var update;
-    update = g_cells.selectAll("polygon.border").data(Array.from(border), (d) => { return d; });
+    update = g_border.selectAll("polygon.border").data(Array.from(border), (d) => { return d; });
     update.join("polygon")
         .classed("border", true)
         .classed("invalid", d => {
@@ -401,7 +401,7 @@ function set_layout() {
 
 function set_view_box() {
     // Keep the <g> border element central and of optimal size to fill the space
-    let box = g_cells.node().getBBox();
+    let box = svg.node().getBBox();
     let wdw_r = wdw_h / wdw_w;
     let box_wdw_ratio = box.width / wdw_w;
     let req_h = box.height / box_wdw_ratio;
@@ -582,6 +582,11 @@ function new_game() {
     var v = variationChoice.querySelector("[name=variation]:checked").getAttribute("value");
     sessionStorage.setItem("nim_variation", v);
     variation = v;
+    if (variation == "Territorial") {
+        chkSeparateColours.checked = true;
+        sessionStorage.setItem("nim_separate_colours", chkSeparateColours.checked);
+        set_cell_fill();
+    }
 
     // set the shape
     shape = lblShape.textContent
@@ -802,7 +807,7 @@ d3.select("div#gridId")
     .attr("viewBox", "0 0 0 0")
 
 var svg = d3.select("svg"),
-    // g_border = svg.append("g"),
+    g_border = svg.append("g"),
     g_cells = svg.append("g");
 
 /*

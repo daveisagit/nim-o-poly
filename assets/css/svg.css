@@ -43,7 +43,7 @@ text {
 /* border */
 polygon.border {
     /* stroke: var(--cell-stroke-light); */
-    stroke: none;
+    stroke: transparent;
     fill-opacity: 20%;
     fill: var(--cell-border-valid);
 }
