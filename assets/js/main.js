@@ -39,7 +39,8 @@ const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
 const chkSeparateColours = document.getElementById("chkSeparateColours");
 const variationChoice = document.getElementById("variationChoice");
-
+const variationBasic = document.getElementById("variationBasic");
+const variationTerritorial = document.getElementById("variationTerritorial");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -582,11 +583,6 @@ function new_game() {
     var v = variationChoice.querySelector("[name=variation]:checked").getAttribute("value");
     sessionStorage.setItem("nim_variation", v);
     variation = v;
-    if (variation == "Territorial") {
-        chkSeparateColours.checked = true;
-        sessionStorage.setItem("nim_separate_colours", chkSeparateColours.checked);
-        set_cell_fill();
-    }
 
     // set the shape
     shape = lblShape.textContent
@@ -755,6 +751,19 @@ btnAcceptUndo.addEventListener("click", () => {
     add_cell(inpUndo.value);
     refresh_ui();
 });
+
+/*
+Default separate colours for variation
+*/
+variationBasic.addEventListener("click", () => {
+    chkSeparateColours.checked = false;
+    sessionStorage.setItem("nim_separate_colours", false);
+});
+variationTerritorial.addEventListener("click", () => {
+    chkSeparateColours.checked = true;
+    sessionStorage.setItem("nim_separate_colours", true);
+});
+
 
 /*
 =========================================================================
