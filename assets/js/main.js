@@ -242,9 +242,9 @@ function update_grid() {
 
 
     var update;
-    update = g_border.selectAll("polygon").data(Array.from(border), (d) => { return d; });
+    update = g_cells.selectAll("polygon.border").data(Array.from(border), (d) => { return d; });
     update.join("polygon")
-        // .classed("border", true)
+        .classed("border", true)
         .classed("invalid", d => {
             return invalid_cells.has(d);
         })
@@ -287,7 +287,7 @@ function update_grid() {
 
         });
 
-    update = g_cells.selectAll("polygon").data(Array.from(set_of_points), (d) => { return d; });
+    update = g_cells.selectAll("polygon.cell").data(Array.from(set_of_points), (d) => { return d; });
     update.join(
         enter => enter.append("polygon")
             .attr("fill", "green")
@@ -307,7 +307,7 @@ function update_grid() {
             return cell_fill_start;
         })
     )
-        // .classed("cell", true)
+        .classed("cell", true)
         .classed("collinear", d => {
             if (collinear_points == null) return false;
             if (collinear_points.has(d)) {
@@ -342,7 +342,7 @@ function update_grid() {
                 return to_play(d);
             })
             .attr("opacity", 1)
-            .transition().duration(3500)
+            .transition().duration(2500)
             .attr("opacity", d => {
                 if (undo_index == instructions.length) return 0; else return 1;
             }),
@@ -401,7 +401,7 @@ function set_layout() {
 
 function set_view_box() {
     // Keep the <g> border element central and of optimal size to fill the space
-    let box = g_border.node().getBBox();
+    let box = g_cells.node().getBBox();
     let wdw_r = wdw_h / wdw_w;
     let box_wdw_ratio = box.width / wdw_w;
     let req_h = box.height / box_wdw_ratio;
@@ -802,8 +802,8 @@ d3.select("div#gridId")
     .attr("viewBox", "0 0 0 0")
 
 var svg = d3.select("svg"),
-    g_border = svg.append("g").classed("border", true),
-    g_cells = svg.append("g").classed("cell", true);
+    // g_border = svg.append("g"),
+    g_cells = svg.append("g");
 
 /*
 !! Go !!

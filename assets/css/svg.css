@@ -19,40 +19,40 @@
 }
 
 
-/* points */
-.cell>polygon {
+/* cell points */
+polygon.cell {
     stroke: var(--cell-stroke-light);
     stroke-width: var(--cell-stroke-width);
 }
 
-.cell>polygon.collinear {
+polygon.collinear.cell {
     fill: var(--cell-point-collinear);
 }
 
-.cell>circle {
+circle {
     stroke: var(--cell-stroke-light);
     fill: var(--cell-stroke-light);
 }
 
-.cell>text {
+text {
     stroke: var(--cell-stroke-light);
     fill: var(--cell-stroke-light);
 }
 
 
 /* border */
-.border>polygon {
+polygon.border {
     /* stroke: var(--cell-stroke-light); */
     stroke: none;
     fill-opacity: 20%;
     fill: var(--cell-border-valid);
 }
 
-.border>polygon.invalid {
+polygon.border.invalid {
     fill: var(--cell-border-invalid);
 }
 
-.border>polygon.collinear {
+polygon.border.collinear {
     fill: var(--cell-point-collinear);
     fill-opacity: 50%;
 }
@@ -63,12 +63,12 @@ used to prevent hover selector happening on
 phones/tablets
 */
 @media (hover: hover) and (pointer: fine) {
-    .border>polygon.invalid:hover {
+    polygon.border.invalid:hover {
         /* fill: var(--cell-border); */
         fill-opacity: 1;
     }
 
-    .border>polygon:hover {
+    polygon.border:hover {
         /* fill: var(--cell-border); */
         fill-opacity: 1;
     }
@@ -81,22 +81,18 @@ line {
 }
 
 /* Dark Mode for outline and dot */
-div.dark .cell>polygon {
+div.dark polygon.cell {
     stroke: var(--cell-stroke-dark);
 }
 
-div.dark .cell>circle {
-    stroke: var(--cell-stroke-dark);
-    fill: var(--cell-stroke-dark);
-}
-
-div.dark .cell>text {
+div.dark circle {
     stroke: var(--cell-stroke-dark);
     fill: var(--cell-stroke-dark);
 }
 
-div.dark .player-to-play {
-    background-color: rgb(34, 94, 34);
+div.dark text {
+    stroke: var(--cell-stroke-dark);
+    fill: var(--cell-stroke-dark);
 }
 
 /* stop Bootstrap oddness after click */
