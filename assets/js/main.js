@@ -38,9 +38,11 @@ const inpUndo = document.getElementById("inpUndo");
 const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
 const chkSeparateColours = document.getElementById("chkSeparateColours");
+const lblVariation = document.getElementById("lblVariation");
 const variationChoice = document.getElementById("variationChoice");
 const variationBasic = document.getElementById("variationBasic");
-const variationTerritorial = document.getElementById("variationTerritorial");
+const variationTerritorial1 = document.getElementById("variationTerritorial1");
+const variationTerritorial2 = document.getElementById("variationTerritorial2");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -88,7 +90,7 @@ function get_session() {
             variation = s;
         }
     }
-    lblShape.textContent = shape;
+    lblVariation.textContent = variationLabels[variation]
 
     // Shape
     if (shape == null) {
@@ -168,8 +170,12 @@ function get_instructions() {
 
 function set_my_points() {
     // create the points set
-    my_points = new Set([JSON.stringify(shape_class.origin)]);
-    for (var i = 0; i < undo_index; i++) {
+    // my_points = new Set([JSON.stringify(shape_class.origin)]);
+    my_points = new Set();
+    if (undo_index <= 2 || variation == "Territorial1") {
+        my_points.add(JSON.stringify(shape_class.origin));
+    }
+    for (var i = 1; i < undo_index; i++) {
         var ins = instructions[i];
         if ((undo_index - i) % 2 == 0) {
             my_points.add(JSON.stringify(ins[1]));
@@ -583,6 +589,7 @@ function new_game() {
     var v = variationChoice.querySelector("[name=variation]:checked").getAttribute("value");
     sessionStorage.setItem("nim_variation", v);
     variation = v;
+    lblVariation.textContent = variationLabels[v];
 
     // set the shape
     shape = lblShape.textContent
@@ -759,7 +766,11 @@ variationBasic.addEventListener("click", () => {
     chkSeparateColours.checked = false;
     sessionStorage.setItem("nim_separate_colours", false);
 });
-variationTerritorial.addEventListener("click", () => {
+variationTerritorial1.addEventListener("click", () => {
+    chkSeparateColours.checked = true;
+    sessionStorage.setItem("nim_separate_colours", true);
+});
+variationTerritorial2.addEventListener("click", () => {
     chkSeparateColours.checked = true;
     sessionStorage.setItem("nim_separate_colours", true);
 });
@@ -770,6 +781,19 @@ variationTerritorial.addEventListener("click", () => {
 MAIN Script
 =========================================================================
 */
+
+function version_upgrade() {
+    var s = sessionStorage.getItem("nim_variation");
+    if (s == "Territorial") {
+        sessionStorage.setItem("nim_variation", "Territorial1");
+    }
+}
+
+const variationLabels = {
+    "Basic": "Basic",
+    "Territorial1": "Territorial 1",
+    "Territorial2": "Territorial 2",
+}
 
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
@@ -797,6 +821,9 @@ var score_points;
 var cell_fill_a;
 var cell_fill_b;
 var cell_fill_start;
+
+// migrate any session/local storage values to the latest version
+version_upgrade();
 
 theme = sessionStorage.getItem("theme");
 if (theme == null) {
