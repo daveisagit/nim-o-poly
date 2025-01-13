@@ -216,7 +216,14 @@ function update_grid() {
         border = shape_class.border(set_of_points);
     } else {
         set_my_points();
-        border = shape_class.border(my_points, set_of_points);
+        if (undo_index <= 2 || variation == "Territorial1") {
+            border = shape_class.border(my_points, set_of_points);
+        } else {
+            const o = new Set([JSON.stringify(shape_class.origin)]);
+            const ob = shape_class.border(o);
+            const exclude = new Set([...set_of_points, ...ob]);
+            border = shape_class.border(my_points, exclude);
+        }
     }
 
 
