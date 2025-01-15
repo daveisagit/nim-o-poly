@@ -209,23 +209,27 @@ function add_cell(d) {
     sessionStorage.setItem("nim_undo_index", undo_index);
 }
 
-function update_grid() {
-
+function get_border(points) {
     // generate the border
     if (variation == "Basic") {
-        border = shape_class.border(set_of_points);
+        return shape_class.border(points);
     } else {
         set_my_points();
         if (undo_index <= 2 || variation == "Territorial1") {
-            border = shape_class.border(my_points, set_of_points);
+            return shape_class.border(my_points, points);
         } else {
             const o = new Set([JSON.stringify(shape_class.origin)]);
             const ob = shape_class.border(o);
-            const exclude = new Set([...set_of_points, ...ob]);
-            border = shape_class.border(my_points, exclude);
+            const exclude = new Set([...points, ...ob]);
+            return shape_class.border(my_points, exclude);
         }
     }
+}
 
+function update_grid() {
+
+    // generate the border
+    border = get_border(set_of_points);
 
     // and invalid cells
     invalid_cells = new Set();
@@ -781,6 +785,7 @@ variationTerritorial2.addEventListener("click", () => {
     chkSeparateColours.checked = true;
     sessionStorage.setItem("nim_separate_colours", true);
 });
+
 
 
 /*
