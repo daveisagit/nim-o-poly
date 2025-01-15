@@ -188,19 +188,12 @@ function set_points() {
     set_of_points = new Set();
     for (var i = 0; i < undo_index; i++) {
         var ins = instructions[i];
-        // if (ins[0] == "+") {
-        //     set_of_points.add(JSON.stringify(ins[1]));
-        // }
-        // if (ins[0] == "-") {
-        //     set_of_points.delete(JSON.stringify(ins[1]));
-        // }
-
-        // we only use + 
         set_of_points.add(JSON.stringify(ins[1]));
     }
 }
 
 function add_cell(d) {
+    // Add a cell to the poly
     instructions.length = undo_index;
     instructions.push(["+", JSON.parse(d)]);
     set_of_points.add(d);
@@ -226,22 +219,28 @@ function get_border(points) {
     }
 }
 
-function update_grid() {
-
-    // generate the border
-    border = get_border(set_of_points);
-
-    // and invalid cells
-    invalid_cells = new Set();
+function get_invalid_cells(bd, wrt) {
+    // return invalid cells of the given border with
+    // respect to a set of played cells
+    var invalid = new Set();
     var no_valid_cells = true;
-    for (const d of border) {
-        var cp = find_collinear(d);
+    for (const d of bd) {
+        var cp = find_collinear(d, wrt);
         if (cp == null) {
             no_valid_cells = false;
             continue;
         }
-        invalid_cells.add(d);
+        invalid.add(d);
     }
+    return [invalid, no_valid_cells];
+}
+
+function update_grid() {
+
+    // generate the border and which are not valid
+    var no_valid_cells;
+    border = get_border(set_of_points);
+    [invalid_cells, no_valid_cells] = get_invalid_cells(border);
 
     // we have a winner
     if (no_valid_cells) {
@@ -256,8 +255,6 @@ function update_grid() {
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
     }
-
-
 
     var update;
     update = g_border.selectAll("polygon.border").data(Array.from(border), (d) => { return d; });
@@ -517,14 +514,15 @@ function refresh_ui() {
     set_view_box();
 }
 
-function find_collinear(snp) {
+function find_collinear(snp, wrt_points) {
     // return a set of points in the points set that are collinear 
     // with the given point (expected in string format)
 
     const np = JSON.parse(snp);
+    if (wrt_points == null) wrt_points = set_of_points;
 
     var vectors = [];
-    for (const ps of set_of_points) {
+    for (const ps of wrt_points) {
         var p = JSON.parse(ps);
         const vec = p.map(function (v, j) { return v - np[j] })
         vectors.push(vec);
