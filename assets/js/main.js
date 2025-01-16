@@ -239,6 +239,7 @@ function update_grid() {
 
     // generate the border and which are not valid
     var no_valid_cells;
+    var outcomes = {};
     border = get_border(set_of_points);
     [invalid_cells, no_valid_cells] = get_invalid_cells(border);
 
@@ -254,11 +255,16 @@ function update_grid() {
         lblCellsPlayed.textContent = undo_index;
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
+    } else {
+        outcomes = assess_options(set_of_points);
     }
+
+
 
     var update;
     update = g_border.selectAll("polygon.border").data(Array.from(border), (d) => { return d; });
     update.join("polygon")
+        .attr("pd", d => { return d; })
         .classed("border", true)
         .classed("invalid", d => {
             return invalid_cells.has(d);
@@ -266,6 +272,14 @@ function update_grid() {
         .classed("collinear", d => {
             if (collinear_points == null) return false;
             if (last_border_cell_selected == d) return true;
+            return false;
+        })
+        .classed("winning", d => {
+            if (outcomes[d] == (undo_index % 2)) return true;
+            return false;
+        })
+        .classed("losing", d => {
+            if (outcomes[d] == 1 - (undo_index % 2)) return true;
             return false;
         })
         .attr("points", d => {
@@ -784,6 +798,109 @@ variationTerritorial2.addEventListener("click", () => {
     sessionStorage.setItem("nim_separate_colours", true);
 });
 
+
+/*
+=========================================================================
+Engine
+=========================================================================
+*/
+
+var seen;
+
+function get_winner(points, to_play, depth = 0) {
+
+    // points is a set of point strings
+    // to_play = 0 or 1 indexing the player_order
+
+    if (depth == 0) return NaN;
+
+    // check memoise
+    var state;
+    var state_string;
+    var cur_points = [...points];
+    cur_points.sort();
+    state = {
+        "ply": to_play,
+        "pts": cur_points
+    }
+    state_string = JSON.stringify(state);
+    if (state_string in seen) {
+        return seen[state_string];
+    }
+
+
+    const bd = get_border(new Set(points));
+    var nvc;
+    var inv;
+    [inv, nvc] = get_invalid_cells(bd, points);
+
+    // if no where to go the other player wins
+    if (nvc) return 1 - to_play;
+
+    var unsure = false;
+    for (const p of bd) {
+        if (inv.has(p)) continue;
+
+        var new_points = [...points];
+        new_points.push(p);
+        new_points.sort();
+        state = {
+            "ply": 1 - to_play,
+            "pts": new_points
+        }
+        state_string = JSON.stringify(state);
+
+        var res = get_winner(new Set(new_points), 1 - to_play, depth - 1);
+        seen[state_string] = res;
+        if (log) {
+            console.log(`Player: ${to_play} Depth: ${depth} - ${p} ${res}`);
+        }
+
+        // this player can win from here
+        if (res == to_play) return to_play;
+
+        if (isNaN(res)) unsure = true;
+
+    }
+
+    // uncertainty 
+    if (unsure) return NaN;
+
+    // no uncertainty so other player wins
+    return 1 - to_play;
+
+}
+
+var log;
+
+function assess_options(points, depth = 6) {
+    seen = {};
+    const bd = get_border(points);
+    var nvc;
+    var inv;
+    [inv, nvc] = get_invalid_cells(bd, points);
+
+
+    const who_to_play = (undo_index % 2);
+    console.log(`Now playing: ${who_to_play}`);
+    var options = {};
+    for (const p of bd) {
+        if (inv.has(p)) continue;
+        log = false;
+        if (p == "[3,-2]") {
+            log = true;
+        }
+        var new_points = [...points];
+        new_points.push(p);
+        new_points.sort();
+        var r = get_winner(new Set([...new_points]), 1 - who_to_play, depth - 1)
+        options[p] = r;
+        if (log) {
+            console.log(`Player: ${who_to_play} Depth: ${depth} - ${p} ${r}`);
+        }
+    }
+    return options
+}
 
 
 /*
