@@ -57,14 +57,6 @@ polygon.border.collinear {
     fill-opacity: 50%;
 }
 
-polygon.border.winning {
-    stroke: yellow;
-}
-
-polygon.border.losing {
-    stroke: blue;
-}
-
 /*
 @media (hover: hover) and (pointer: fine) 
 used to prevent hover selector happening on

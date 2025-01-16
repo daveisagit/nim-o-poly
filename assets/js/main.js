@@ -219,32 +219,34 @@ function get_border(points) {
     }
 }
 
-function get_invalid_cells(bd, wrt) {
+function get_border_validity(bd, wrt) {
     // return invalid cells of the given border with
     // respect to a set of played cells
+    var valid = new Set();
     var invalid = new Set();
-    var no_valid_cells = true;
     for (const d of bd) {
         var cp = find_collinear(d, wrt);
         if (cp == null) {
-            no_valid_cells = false;
-            continue;
+            valid.add(d)
+        } else {
+            invalid.add(d);
         }
-        invalid.add(d);
     }
-    return [invalid, no_valid_cells];
+    return [valid, invalid];
 }
 
 function update_grid() {
 
-    // generate the border and which are not valid
-    var no_valid_cells;
+    var invalid_cells;
+    var valid_cells;
     var outcomes = {};
+
+    // generate the border and which are not valid
     border = get_border(set_of_points);
-    [invalid_cells, no_valid_cells] = get_invalid_cells(border);
+    [valid_cells, invalid_cells] = get_border_validity(border);
 
     // we have a winner
-    if (no_valid_cells) {
+    if (valid_cells.size == 0) {
         var winner = player_order[(undo_index) % 2];
         lblWinner.textContent = winner;
         if (winner == "A") {
@@ -255,10 +257,7 @@ function update_grid() {
         lblCellsPlayed.textContent = undo_index;
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
-    } else {
-        outcomes = assess_options(set_of_points);
     }
-
 
 
     var update;
@@ -272,14 +271,6 @@ function update_grid() {
         .classed("collinear", d => {
             if (collinear_points == null) return false;
             if (last_border_cell_selected == d) return true;
-            return false;
-        })
-        .classed("winning", d => {
-            if (outcomes[d] == (undo_index % 2)) return true;
-            return false;
-        })
-        .classed("losing", d => {
-            if (outcomes[d] == 1 - (undo_index % 2)) return true;
             return false;
         })
         .attr("points", d => {
@@ -430,7 +421,7 @@ function set_layout() {
 
 function set_view_box() {
     // Keep the <g> border element central and of optimal size to fill the space
-    let box = svg.node().getBBox();
+    let box = g_elem.node().getBBox();
     let wdw_r = wdw_h / wdw_w;
     let box_wdw_ratio = box.width / wdw_w;
     let req_h = box.height / box_wdw_ratio;
@@ -801,110 +792,6 @@ variationTerritorial2.addEventListener("click", () => {
 
 /*
 =========================================================================
-Engine
-=========================================================================
-*/
-
-var seen;
-
-function get_winner(points, to_play, depth = 0) {
-
-    // points is a set of point strings
-    // to_play = 0 or 1 indexing the player_order
-
-    if (depth == 0) return NaN;
-
-    // check memoise
-    var state;
-    var state_string;
-    var cur_points = [...points];
-    cur_points.sort();
-    state = {
-        "ply": to_play,
-        "pts": cur_points
-    }
-    state_string = JSON.stringify(state);
-    if (state_string in seen) {
-        return seen[state_string];
-    }
-
-
-    const bd = get_border(new Set(points));
-    var nvc;
-    var inv;
-    [inv, nvc] = get_invalid_cells(bd, points);
-
-    // if no where to go the other player wins
-    if (nvc) return 1 - to_play;
-
-    var unsure = false;
-    for (const p of bd) {
-        if (inv.has(p)) continue;
-
-        var new_points = [...points];
-        new_points.push(p);
-        new_points.sort();
-        state = {
-            "ply": 1 - to_play,
-            "pts": new_points
-        }
-        state_string = JSON.stringify(state);
-
-        var res = get_winner(new Set(new_points), 1 - to_play, depth - 1);
-        seen[state_string] = res;
-        if (log) {
-            console.log(`Player: ${to_play} Depth: ${depth} - ${p} ${res}`);
-        }
-
-        // this player can win from here
-        if (res == to_play) return to_play;
-
-        if (isNaN(res)) unsure = true;
-
-    }
-
-    // uncertainty 
-    if (unsure) return NaN;
-
-    // no uncertainty so other player wins
-    return 1 - to_play;
-
-}
-
-var log;
-
-function assess_options(points, depth = 6) {
-    seen = {};
-    const bd = get_border(points);
-    var nvc;
-    var inv;
-    [inv, nvc] = get_invalid_cells(bd, points);
-
-
-    const who_to_play = (undo_index % 2);
-    console.log(`Now playing: ${who_to_play}`);
-    var options = {};
-    for (const p of bd) {
-        if (inv.has(p)) continue;
-        log = false;
-        if (p == "[3,-2]") {
-            log = true;
-        }
-        var new_points = [...points];
-        new_points.push(p);
-        new_points.sort();
-        var r = get_winner(new Set([...new_points]), 1 - who_to_play, depth - 1)
-        options[p] = r;
-        if (log) {
-            console.log(`Player: ${who_to_play} Depth: ${depth} - ${p} ${r}`);
-        }
-    }
-    return options
-}
-
-
-/*
-=========================================================================
 MAIN Script
 =========================================================================
 */
@@ -929,7 +816,6 @@ var instructions;
 var set_of_points;
 var my_points;
 var border;
-var invalid_cells;
 var theme;
 var undo_index = 0;
 var variation;
@@ -969,9 +855,10 @@ d3.select("div#gridId")
     .attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox", "0 0 0 0")
 
-var svg = d3.select("svg"),
-    g_border = svg.append("g"),
-    g_cells = svg.append("g");
+var svg = d3.select("svg");
+var g_elem = svg.append("g");
+var g_border = g_elem.append("g");
+var g_cells = g_elem.append("g");
 
 /*
 !! Go !!
