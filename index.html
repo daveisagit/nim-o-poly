@@ -47,10 +47,10 @@
                     <h2 class="text-center rounded-4 px-2 d-inline" id="playerB">B</h2>
                 </div>
             </div>
-            <div class="px-2 d-flex flex-row justify-content-between">
-                <div class="text-start mr-auto" id="lblPlayerAName"></div>
-                <div class="text-center mr-auto" id="lblVariation"></div>
-                <div class="text_end" id="lblPlayerBName"></div>
+            <div class="px-2 row">
+                <div class="col-4 text-start" id="lblPlayerAName"></div>
+                <div class="col-4 text-center" id="lblVariation"></div>
+                <div class="col-4 text-end" id="lblPlayerBName"></div>
             </div>
 
             <div class="py-2 d-flex flex-row justify-content-center">
@@ -86,6 +86,29 @@
         <div class="py-3 collapse" id="new-game">
 
             <button type="button" class="btn btn-primary" id="btnResetScores">Reset Scores</button>
+
+            <h3 class="pt-4">Opponent</h3>
+            <div class="">
+                <p>Two players or play <strong><i>The Browser</i></strong></p>
+                <div class="d-flex justify-content-center m-4" id="opponentChoice">
+                    <input type="radio" class="btn-check" name="opponent-options" id="opponent0" autocomplete="off"
+                        value="0" checked>
+                    <label class="btn mx-2" for="opponent0">2 Players<span
+                            class="d-block material-symbols-outlined interests__icon h1">group</span></label>
+                    <input type="radio" class="btn-check" name="opponent-options" id="opponent1" autocomplete="off"
+                        value="1">
+                    <label class="btn mx-2" for="opponent1">Random<img class="d-block bowser"
+                            src="./assets/img/bowser-1.png" alt=""></label>
+                    <input type="radio" class="btn-check" name="opponent-options" id="opponent2" autocomplete="off"
+                        value="2">
+                    <label class="btn mx-2" for="opponent2">Careful<img class="d-block bowser"
+                            src="./assets/img/bowser-2.png" alt=""></label>
+                    <input type="radio" class="btn-check" name="opponent-options" id="opponent3" autocomplete="off"
+                        value="3">
+                    <label class="btn mx-2" for="opponent3">Mindful<img class="d-block bowser"
+                            src="./assets/img/bowser-3.png" alt=""></label>
+                </div>
+            </div>
 
             <h3 class="pt-4">Players</h3>
             <div class="">
@@ -131,6 +154,7 @@
                     <label class="form-check-label" for="chkSeparateColours">Separate colours</label>
                 </div>
             </div>
+
 
             <h3 class="pt-4">Shape</h3>
             <p>Select the polyomino shape (toggle between square and hexagon)</p>
@@ -320,6 +344,22 @@
         <div class="collapse" id="gridId"></div>
 
     </div>
+
+
+    <!-- Thinking Modal -->
+    <div class="modal fade" id="thinkingModal" tabindex="-1" aria-labelledby="thinkingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h1 class="bamboo">Bowser</h1>
+                    <h3>Thinking</h3>
+                    <h3><span class="h1" id="lblLevel"></span>Big thoughts</h3>
+                    <img class="img-fluid" src="./assets/img/bowser_full.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Undo Modal -->
     <div class="modal fade" id="undoModal" tabindex="-1" aria-labelledby="undoModalLabel" aria-hidden="true">

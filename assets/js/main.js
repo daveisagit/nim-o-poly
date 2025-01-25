@@ -43,6 +43,13 @@ const variationChoice = document.getElementById("variationChoice");
 const variationBasic = document.getElementById("variationBasic");
 const variationTerritorial1 = document.getElementById("variationTerritorial1");
 const variationTerritorial2 = document.getElementById("variationTerritorial2");
+const opponent0 = document.getElementById("opponent0");
+const opponent1 = document.getElementById("opponent1");
+const opponent2 = document.getElementById("opponent2");
+const opponent3 = document.getElementById("opponent3");
+const opponentChoices = document.getElementById("opponentChoice");
+const thinkingModal = document.getElementById("thinkingModal");
+
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -92,6 +99,20 @@ function get_session() {
     }
     lblVariation.textContent = variationLabels[variation]
 
+    // Opponent
+    if (opponent == null) {
+        opponent = 0;
+        s = sessionStorage.getItem("nim_opponent");
+        if (s != null) {
+            document.getElementById(`opponent${s}`).checked = true;
+            opponent = parseInt(s);
+        }
+        if (opponent > 0) {
+            set_opponent(opponent);
+            lblPlayerBName.textContent = opponentLabels[opponent];
+        }
+    }
+
     // Shape
     if (shape == null) {
         shape = "hexagon";
@@ -137,6 +158,22 @@ function get_session() {
         bsNew.show();
     }
 
+}
+
+function set_opponent(opp) {
+
+    if (opp > 0) {
+        const name = opponentLabels[opp];
+        // lblPlayerBName.textContent = name
+        playerBName.value = name;
+        playerBName.disabled = true;
+    } else {
+        var pb = sessionStorage.getItem("nim_B");
+        if (pb == null) pb = "";
+        // lblPlayerBName.textContent = pb;
+        playerBName.value = pb;
+        playerBName.disabled = false;
+    }
 }
 
 function set_shape_class() {
@@ -278,6 +315,9 @@ function update_grid() {
             return shape_class.polygon_corners(layout, ad).map(p => `${p.x.toFixed(0)},${p.y.toFixed(0)}`).join(" ")
         })
         .on("click", (e, d) => {
+            if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B") {
+                return
+            }
 
             if (last_border_cell_selected == d) {
                 collinear_points = null;
@@ -294,6 +334,8 @@ function update_grid() {
                         // otherwise confirm an undo
                         last_border_cell_selected = null;
                         inpUndo.value = d;
+                        // set modal attributes (we do not permit undo for Bowser)
+
                         var modal = new bootstrap.Modal(undoModal);
                         modal.show();
                     }
@@ -472,14 +514,16 @@ function to_play(d) {
 }
 
 function set_header() {
-    if (player_order[(undo_index + 1) % 2] == "A") {
-        radioAToPlay.checked = true;
-        playerA.setAttribute("style", `background-color: ${cell_fill_a};`)
-        playerB.removeAttribute("style");
-    } else {
-        radioBToPlay.checked = true;
-        playerA.removeAttribute("style");
-        playerB.setAttribute("style", `background-color: ${cell_fill_b};`)
+    if (undo_index != undefined && player_order != undefined) {
+        if (player_order[(undo_index + 1) % 2] == "A") {
+            radioAToPlay.checked = true;
+            playerA.setAttribute("style", `background-color: ${cell_fill_a};`)
+            playerB.removeAttribute("style");
+        } else {
+            radioBToPlay.checked = true;
+            playerA.removeAttribute("style");
+            playerB.setAttribute("style", `background-color: ${cell_fill_b};`)
+        }
     }
 
     lblScoreA.innerText = "";
@@ -517,7 +561,40 @@ function refresh_ui() {
     update_grid();
     set_header();
     set_view_box();
+
+    // if its Bowsers turn and we are not undo-ing things
+    if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B" && undo_index == instructions.length) {
+        bowser_think();
+    }
 }
+
+function bowser_think() {
+
+    // generate the border and which are not valid
+    var valid_cells, invalid_cells;
+    border = get_border(set_of_points);
+    [valid_cells, invalid_cells] = get_border_validity(border);
+    bowser_options = Array.from(valid_cells);
+
+    // no options then quit - browser lost
+    if (bowser_options.length == 0) return;
+
+    modalBowser = new bootstrap.Modal(thinkingModal, {
+        backdrop: 'static',
+        keyboard: false
+    });
+    modalBowser.show();
+    setTimeout(bowser_play, 3000);
+
+}
+
+function bowser_play() {
+    modalBowser.hide();
+    var cell = bowser_options[Math.floor(Math.random() * bowser_options.length)];
+    add_cell(cell);
+    refresh_ui();
+}
+
 
 function find_collinear(snp, wrt_points) {
     // return a set of points in the points set that are collinear 
@@ -613,6 +690,16 @@ function new_game() {
     var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
     sessionStorage.setItem("nim_collinearity", v);
     collinearity = parseInt(v);
+
+    // set the opponent
+    var v = opponentChoices.querySelector("[name=opponent-options]:checked").getAttribute("value");
+    sessionStorage.setItem("nim_opponent", v);
+    opponent = parseInt(v);
+    if (opponent > 0) {
+        lblPlayerBName.textContent = opponentLabels[opponent];
+    } else {
+        lblPlayerBName.textContent = playerBName.value;
+    }
 
     v = divPlayers.querySelector("[name=who-to-play]:checked").getAttribute("value");
     if (v == "A") v = "AB"; else v = "BA"
@@ -789,6 +876,23 @@ variationTerritorial2.addEventListener("click", () => {
     sessionStorage.setItem("nim_separate_colours", true);
 });
 
+/*
+Opponent
+*/
+opponent0.addEventListener("click", () => {
+    set_opponent(0);
+});
+opponent1.addEventListener("click", () => {
+    set_opponent(1);
+});
+opponent2.addEventListener("click", () => {
+    set_opponent(2);
+});
+opponent3.addEventListener("click", () => {
+    set_opponent(3);
+});
+
+
 
 /*
 =========================================================================
@@ -809,6 +913,14 @@ const variationLabels = {
     "Territorial2": "Territorial 2",
 }
 
+const opponentLabels = [
+    "2 Player",
+    "Random 👹",
+    "Careful 👹",
+    "Mindful 👹",
+]
+
+
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
@@ -819,6 +931,7 @@ var border;
 var theme;
 var undo_index = 0;
 var variation;
+var opponent;
 var shape;
 var layout;
 var wdw_w;
@@ -834,6 +947,8 @@ var score_points;
 var cell_fill_a;
 var cell_fill_b;
 var cell_fill_start;
+var bowser_options;
+var modalBowser;
 
 // migrate any session/local storage values to the latest version
 version_upgrade();

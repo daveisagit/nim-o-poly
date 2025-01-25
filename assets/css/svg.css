@@ -99,3 +99,7 @@ div.dark text {
 .btn:disabled {
     border: none;
 }
+
+img.bowser {
+    max-width: 50px;
+}
