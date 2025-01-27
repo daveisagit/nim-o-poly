@@ -314,6 +314,8 @@ function update_grid() {
         lblCellsPlayed.textContent = undo_index;
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
+    } else {
+        outcomes = assess_options(set_of_points);
     }
 
 
@@ -328,6 +330,14 @@ function update_grid() {
         .classed("collinear", d => {
             if (collinear_points == null) return false;
             if (last_border_cell_selected == d) return true;
+            return false;
+        })
+        .classed("winning", d => {
+            if (outcomes[d] == (undo_index % 2)) return true;
+            return false;
+        })
+        .classed("losing", d => {
+            if (outcomes[d] == 1 - (undo_index % 2)) return true;
             return false;
         })
         .attr("points", d => {
@@ -924,6 +934,86 @@ opponent2.addEventListener("click", () => {
 opponent3.addEventListener("click", () => {
     set_opponent(3);
 });
+
+
+/*
+=========================================================================
+Engine
+=========================================================================
+*/
+
+var seen;
+
+function get_result(points, depth = 0) {
+
+    // points is a set of point strings
+    // to_play = 0 or 1 indexing the player_order
+    var to_play = points.size % 2;
+
+    if (depth == 0) return NaN;
+
+    // check memoise
+    var state_string;
+    var new_state_string;
+    var points_array = [...points];
+    points_array.sort();
+    state_string = JSON.stringify(points_array);
+    if (state_string in seen) {
+        return seen[state_string];
+    }
+
+
+    const bd = get_border(points);
+    var valid;
+    var invalid;
+    [valid, invalid] = get_border_validity(bd, points);
+
+    // if no where to go the other player wins
+    if (valid.size == 0) return 1 - to_play;
+
+    var unsure = false;
+    for (const p of valid) {
+
+        points_array = [...points];
+        points_array.push(p);
+        points_array.sort();
+        new_state_string = JSON.stringify(points_array);
+
+        var res = get_result(new Set(points_array), depth - 1);
+        seen[new_state_string] = res;
+
+        // this player can win from here
+        if (res == to_play) return to_play;
+
+        if (isNaN(res)) unsure = true;
+
+    }
+
+    // uncertainty 
+    if (unsure) return NaN;
+
+    // no uncertainty so other player wins
+    return 1 - to_play;
+
+}
+
+function assess_options(points, depth = 6) {
+    seen = {};
+    const bd = get_border(points);
+    var valid;
+    var invalid;
+    [valid, invalid] = get_border_validity(bd, points);
+
+    var options = {};
+    for (const p of valid) {
+        var new_points = [...points];
+        new_points.push(p);
+        new_points.sort();
+        var r = get_result(new Set([...new_points]), depth - 1)
+        options[p] = r;
+    }
+    return options
+}
 
 
 
