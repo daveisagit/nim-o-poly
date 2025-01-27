@@ -205,10 +205,13 @@ function get_instructions() {
     }
 }
 
-function set_my_points() {
+function get_my_points_territorial() {
     // create the points set
     // my_points = new Set([JSON.stringify(shape_class.origin)]);
-    my_points = new Set();
+    // this includes the origin on the first go
+    // this function to be dropped, get_border will receive my_points
+    // as an optional set
+    var my_points = new Set();
     if (undo_index <= 2 || variation == "Territorial1") {
         my_points.add(JSON.stringify(shape_class.origin));
     }
@@ -218,6 +221,7 @@ function set_my_points() {
             my_points.add(JSON.stringify(ins[1]));
         }
     }
+    return my_points;
 }
 
 function set_points() {
@@ -239,15 +243,26 @@ function add_cell(d) {
     sessionStorage.setItem("nim_undo_index", undo_index);
 }
 
-function get_border(points) {
+function get_border(points, my_points) {
     // generate the border
+    // points: whole polyomino
+    // my_points: optional for territorial include the origin
+    // we will handle excluding the origin for Territorial2
     if (variation == "Basic") {
         return shape_class.border(points);
     } else {
-        set_my_points();
+        // determine my_points from instructions if not given
+        // when engine thinking my_points should be given 
+        // this is just assist normal play
+        if (my_points == null) {
+            my_points = get_my_points_territorial();
+        }
         if (undo_index <= 2 || variation == "Territorial1") {
+            // if its first go for either player or we are playing v1
+            // then cells bordering the origin are not excluded
             return shape_class.border(my_points, points);
         } else {
+            // otherwise exclude cells bordering the origin
             const o = new Set([JSON.stringify(shape_class.origin)]);
             const ob = shape_class.border(o);
             const exclude = new Set([...points, ...ob]);
@@ -278,8 +293,10 @@ function update_grid() {
     var valid_cells;
     var outcomes = {};
 
-    // generate the border and which are not valid
+    // generate the border
     border = get_border(set_of_points);
+
+    // and which are valid or not
     [valid_cells, invalid_cells] = get_border_validity(border);
 
     // we have a winner
@@ -570,7 +587,7 @@ function refresh_ui() {
 
 function bowser_think() {
 
-    // generate the border and which are not valid
+    // generate a default set of bowser options
     var valid_cells, invalid_cells;
     border = get_border(set_of_points);
     [valid_cells, invalid_cells] = get_border_validity(border);
@@ -579,8 +596,9 @@ function bowser_think() {
     // no options then quit - browser lost
     if (bowser_options.length == 0) return;
 
+    // show the thinking modal (which can't be closed) and force play in 3s
     modalBowser = new bootstrap.Modal(thinkingModal, {
-        backdrop: 'static',
+        backdrop: "static",
         keyboard: false
     });
     modalBowser.show();
@@ -926,7 +944,6 @@ const cell_fill_2 = "peru";
 const cell_size = 20;
 var instructions;
 var set_of_points;
-var my_points;
 var border;
 var theme;
 var undo_index = 0;
