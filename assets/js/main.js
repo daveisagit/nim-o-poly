@@ -49,7 +49,7 @@ const opponent2 = document.getElementById("opponent2");
 const opponent3 = document.getElementById("opponent3");
 const opponentChoices = document.getElementById("opponentChoice");
 const thinkingModal = document.getElementById("thinkingModal");
-
+const lblThinkingSpinner = document.getElementById("lblThinkingSpinner");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -120,6 +120,7 @@ function get_session() {
         if (s != null) shape = s;
     }
     lblShape.textContent = shape;
+    lblThinkingSpinner.textContent = shape;
 
     // Collinearity
     if (collinearity == null) {
@@ -401,8 +402,14 @@ function update_grid() {
 
     // add the central dot
     update = g_cells.selectAll("circle").data(Array.from(set_of_points), (d) => { return d; });
-    update.join("circle")
-        .attr("r", cell_size / 10)
+    update.join(
+        // "circle"
+        enter => enter.append("circle")
+            .attr("r", cell_size / 2)
+            .transition().duration(700)
+            .attr("r", cell_size / 10)
+    )
+        // .attr("r", cell_size / 10)
         .attr("cx", d => {
             const ad = JSON.parse(d);
             return shape_class.to_pixel(layout, ad).x.toFixed(0)
@@ -581,7 +588,7 @@ function refresh_ui() {
 
     // if its Bowsers turn and we are not undo-ing things
     if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B" && undo_index == instructions.length) {
-        bowser_think();
+        setTimeout(bowser_think, 1000);
     }
 }
 
@@ -602,12 +609,16 @@ function bowser_think() {
         keyboard: false
     });
     modalBowser.show();
-    setTimeout(bowser_play, 3000);
+    setTimeout(bowser_stop_thinking, 3000);
 
 }
 
-function bowser_play() {
+function bowser_stop_thinking() {
     modalBowser.hide();
+    setTimeout(bowser_play, 600);
+}
+
+function bowser_play() {
     var cell = bowser_options[Math.floor(Math.random() * bowser_options.length)];
     add_cell(cell);
     refresh_ui();
@@ -701,7 +712,8 @@ function new_game() {
     lblVariation.textContent = variationLabels[v];
 
     // set the shape
-    shape = lblShape.textContent
+    shape = lblShape.textContent;
+    lblThinkingSpinner.textContent = shape;
     sessionStorage.setItem("nim_shape", shape);
 
     // set the collinearity

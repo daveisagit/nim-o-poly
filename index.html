@@ -13,6 +13,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!--========== SVG CSS ==========-->
+    <link rel="stylesheet" href="assets/css/spinner.css">
     <link rel="stylesheet" href="assets/css/svg.css">
 
     <!--========== Bamboo font ==========-->
@@ -56,25 +57,25 @@
             <div class="py-2 d-flex flex-row justify-content-center">
                 <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#new-game"
                     aria-expanded="false" aria-controls="collapseNewGame" title="Start a new game">
-                    <span class="material-symbols-outlined interests__icon h2">sports</span>
+                    <span class="material-symbols-outlined  h2">sports</span>
                 </button>
 
                 <button type="button" class="btn btn-sm" id="btnUndo" title="Undo">
-                    <span class="material-symbols-outlined interests__icon">undo</span>
+                    <span class="material-symbols-outlined ">undo</span>
                 </button>
                 <h2 class="d-inline"><span class="badge bg-secondary" id="sizeId"
                         title="The size of the Polyomino">1</span></h2>
                 <button type="button" class="btn btn-sm" id="btnRedo" title="Redo">
-                    <span class="material-symbols-outlined interests__icon">redo</span>
+                    <span class="material-symbols-outlined ">redo</span>
                 </button>
 
                 <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#help"
                     aria-expanded="false" aria-controls="collapseHelp" title="Help / About">
-                    <span class="material-symbols-outlined interests__icon">help</span>
+                    <span class="material-symbols-outlined ">help</span>
                 </button>
 
                 <button type="button" class="btn btn-sm" id="btnTheme" title="Theme Light/Dark mode">
-                    <span class="material-symbols-outlined interests__icon" id="btnThemeText">light_mode</span>
+                    <span class="material-symbols-outlined " id="btnThemeText">light_mode</span>
                 </button>
             </div>
 
@@ -94,7 +95,7 @@
                     <input type="radio" class="btn-check" name="opponent-options" id="opponent0" autocomplete="off"
                         value="0" checked>
                     <label class="btn mx-2" for="opponent0">2 Players<span
-                            class="d-block material-symbols-outlined interests__icon h1">group</span></label>
+                            class="d-block material-symbols-outlined  h1">group</span></label>
                     <input type="radio" class="btn-check" name="opponent-options" id="opponent1" autocomplete="off"
                         value="1">
                     <label class="btn mx-2" for="opponent1">Random<img class="d-block bowser"
@@ -159,12 +160,12 @@
             <h3 class="pt-4">Shape</h3>
             <p>Select the polyomino shape (toggle between square and hexagon)</p>
             <!-- <p>Select the polyomino shape <span
-                    class="align-middle material-symbols-outlined interests__icon">square</span>
+                    class="align-middle material-symbols-outlined ">square</span>
                 <span class="align-middle">/</span>
-                <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
+                <span class="align-middle material-symbols-outlined ">hexagon</span>
             </p> -->
             <button type="button" class="btn btn-secondary" id="btnShape" title="Shape type">
-                <span class="material-symbols-outlined interests__icon h1 mb-0" id="lblShape">hexagon</span>
+                <span class="material-symbols-outlined  h1 mb-0" id="lblShape">hexagon</span>
             </button>
 
             <h3 class="pt-4">Collinearity</h3>
@@ -202,7 +203,7 @@
 
             <p>Click play to start a new game with these settings</p>
             <button type="button" class="btn btn-success" id="btnNew" title="Start a new game">
-                <span class="material-symbols-outlined interests__icon h1 mb-0">play_circle</span>
+                <span class="material-symbols-outlined  h1 mb-0">play_circle</span>
             </button>
 
         </div>
@@ -232,8 +233,8 @@
                             <span class="align-middle">The Polyomino can be made up from connected
                                 <strong>square</strong> or <strong>hexagonal</strong>
                                 cells</span>
-                            <span class="align-middle material-symbols-outlined interests__icon">square</span>
-                            <span class="align-middle material-symbols-outlined interests__icon">hexagon</span>
+                            <span class="align-middle material-symbols-outlined ">square</span>
+                            <span class="align-middle material-symbols-outlined ">hexagon</span>
                         </div>
                         Any new cell added during the game must
                         <ul>
@@ -258,7 +259,7 @@
                         <div>
                             <span class="align-middle">The shape, collinearity limit and variation can be set in the
                                 game options</span>
-                            <span class="align-middle material-symbols-outlined interests__icon">sports</span>
+                            <span class="align-middle material-symbols-outlined ">sports</span>
                         </div>
 
                         <h3 class="my-4">Variations</h3>
@@ -271,7 +272,7 @@
 
 
                         <h1 class="my-4 text-center">Game Options <span
-                                class="align-middle material-symbols-outlined interests__icon h1">sports</span></h1>
+                                class="align-middle material-symbols-outlined  h1">sports</span></h1>
 
                         <div class="text-start">
                             Some things can be changed during play:
@@ -284,7 +285,7 @@
                             <div>
                                 <span class="align-middle">Where as these only come into affect upon starting a new
                                     game.</span>
-                                <span class="align-middle material-symbols-outlined interests__icon">play_circle</span>
+                                <span class="align-middle material-symbols-outlined ">play_circle</span>
                             </div>
 
                             <ul>
@@ -296,8 +297,8 @@
 
                             <div>
                                 <span class="align-middle">During play you have the options </span>
-                                <span class="align-middle material-symbols-outlined interests__icon">undo</span>
-                                <span class="align-middle material-symbols-outlined interests__icon">redo</span>
+                                <span class="align-middle material-symbols-outlined ">undo</span>
+                                <span class="align-middle material-symbols-outlined ">redo</span>
                                 <span class="align-middle">to review the game history.</span>
                             </div>
                             <p><i>Undo-ing</i> play is allowed, but you will be prompted to confirm that is the intent.
@@ -354,7 +355,10 @@
                     <h1 class="bamboo">Bowser</h1>
                     <h3>Thinking</h3>
                     <h3><span class="h1" id="lblLevel"></span>Big thoughts</h3>
-                    <img class="img-fluid" src="./assets/img/bowser_full.png" alt="">
+                    <img style="max-width: 100px;" src="./assets/img/bowser_full.png" alt="">
+                    <div class="pt-3">
+                        <span class="rotating material-symbols-outlined h1 mb-0" id="lblThinkingSpinner"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -410,7 +414,7 @@
                 <div class="modal-body text-center">
                     <h1>Hi 🙂</h1>
                     <h3>Welcome to <span class="bamboo">Nim-o-Poly</span></h3>
-                    <span class="material-symbols-outlined interests__icon h1 mb-0">crossword</span>
+                    <span class="material-symbols-outlined  h1 mb-0">crossword</span>
                     <h5>A <a href="https://en.wikipedia.org/wiki/Nim" target="wiki">Nim</a>-style game with <a
                             href="https://en.wikipedia.org/wiki/Polyomino" target="wiki">Polyominoes</a></h5>
                     <p class="pt-2">In classic Nim you remove matches from piles and try to avoid or take the last
@@ -425,7 +429,7 @@
                     </div>
                     <div>
                         <span class="align-middle">See the rules</span>
-                        <span class="align-middle material-symbols-outlined interests__icon">help</span>
+                        <span class="align-middle material-symbols-outlined ">help</span>
                         <span class="align-middle">for more details.</span>
                     </div>
                     <p>Or, just get on learn as you play.</p>
