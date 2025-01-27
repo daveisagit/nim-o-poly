@@ -1,5 +1,6 @@
 import * as poly from "./poly.js";
 import * as mtx from "./matrix.js";
+import * as bt from "./thoughts.js";
 
 /*
 DOM elements
@@ -50,6 +51,7 @@ const opponent3 = document.getElementById("opponent3");
 const opponentChoices = document.getElementById("opponentChoice");
 const thinkingModal = document.getElementById("thinkingModal");
 const lblThinkingSpinner = document.getElementById("lblThinkingSpinner");
+const lblThought = document.getElementById("lblThought");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -608,6 +610,7 @@ function bowser_think() {
         backdrop: "static",
         keyboard: false
     });
+    lblThought.textContent = bt.get_thought();
     modalBowser.show();
     setTimeout(bowser_stop_thinking, 3000);
 
