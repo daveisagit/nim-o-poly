@@ -238,6 +238,24 @@ function get_my_points_territorial() {
     return my_points;
 }
 
+function get_mine_and_theirs() {
+    var my_points = new Set();
+    var their_points = new Set();
+    if (undo_index <= 2 || variation != "Territorial2") {
+        my_points.add(JSON.stringify(shape_class.origin));
+        their_points_points.add(JSON.stringify(shape_class.origin));
+    }
+    for (var i = 1; i < undo_index; i++) {
+        var ins = instructions[i];
+        if ((undo_index - i) % 2 == 0) {
+            my_points.add(JSON.stringify(ins[1]));
+        } else {
+            their_points_points.add(JSON.stringify(ins[1]));
+        }
+    }
+    return [my_points, their_points];
+}
+
 function set_points() {
     // create the points set
     set_of_points = new Set();
