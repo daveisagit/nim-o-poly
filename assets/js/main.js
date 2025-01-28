@@ -326,7 +326,9 @@ function update_grid() {
         var modal = new bootstrap.Modal(winnerModal);
         modal.show();
     } else {
-        outcomes = assess_options(set_of_points);
+        if (hint) {
+            outcomes = assess_options(set_of_points);
+        }
     }
 
 
@@ -344,11 +346,11 @@ function update_grid() {
             return false;
         })
         .classed("winning", d => {
-            if (outcomes[d] == (undo_index % 2)) return true;
+            if (hint && outcomes[d] == (undo_index % 2)) return true;
             return false;
         })
         .classed("losing", d => {
-            if (outcomes[d] == 1 - (undo_index % 2)) return true;
+            if (hint && outcomes[d] == 1 - (undo_index % 2)) return true;
             return false;
         })
         .attr("points", d => {
@@ -1060,7 +1062,7 @@ const opponentLabels = [
     "Mindful",
 ]
 
-
+const hint = true;
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
