@@ -52,6 +52,7 @@ const opponentChoices = document.getElementById("opponentChoice");
 const thinkingModal = document.getElementById("thinkingModal");
 const lblThinkingSpinner = document.getElementById("lblThinkingSpinner");
 const lblThought = document.getElementById("lblThought");
+const lblBowserIcon = document.getElementById("lblBowserIcon");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -112,6 +113,12 @@ function get_session() {
         if (opponent > 0) {
             set_opponent(opponent);
             lblPlayerBName.textContent = opponentLabels[opponent];
+            lblBowserIcon.classList.add("d-inline-block")
+            lblBowserIcon.classList.remove("d-none")
+        }
+        else {
+            lblBowserIcon.classList.remove("d-inline-block")
+            lblBowserIcon.classList.add("d-none")
         }
     }
 
@@ -170,12 +177,16 @@ function set_opponent(opp) {
         // lblPlayerBName.textContent = name
         playerBName.value = name;
         playerBName.disabled = true;
+        // lblBowserIcon.classList.add("d-inline")
+        // lblBowserIcon.classList.remove("d-none")
     } else {
         var pb = sessionStorage.getItem("nim_B");
         if (pb == null) pb = "";
         // lblPlayerBName.textContent = pb;
         playerBName.value = pb;
         playerBName.disabled = false;
+        // lblBowserIcon.classList.remove("d-inline")
+        // lblBowserIcon.classList.add("d-none")
     }
 }
 
@@ -616,17 +627,19 @@ function bowser_think() {
     if (bowser_options.length == 0) return;
 
     // show the thinking modal (which can't be closed) and force play in 3s
+    lblBowserIcon.classList.add("rotating");
     modalBowser = new bootstrap.Modal(thinkingModal, {
         backdrop: "static",
         keyboard: false
     });
     lblThought.textContent = bt.get_thought();
-    modalBowser.show();
+    // modalBowser.show();
     setTimeout(bowser_stop_thinking, 3000);
 
 }
 
 function bowser_stop_thinking() {
+    lblBowserIcon.classList.remove("rotating");
     modalBowser.hide();
     setTimeout(bowser_play, 600);
 }
@@ -740,8 +753,12 @@ function new_game() {
     opponent = parseInt(v);
     if (opponent > 0) {
         lblPlayerBName.textContent = opponentLabels[opponent];
+        lblBowserIcon.classList.add("d-inline-block")
+        lblBowserIcon.classList.remove("d-none")
     } else {
         lblPlayerBName.textContent = playerBName.value;
+        lblBowserIcon.classList.remove("d-inline-block")
+        lblBowserIcon.classList.add("d-none")
     }
 
     v = divPlayers.querySelector("[name=who-to-play]:checked").getAttribute("value");
@@ -997,7 +1014,7 @@ function get_result(points, depth = 0) {
 
 }
 
-function assess_options(points, depth = 6) {
+function assess_options(points, depth = 4) {
     seen = {};
     const bd = get_border(points);
     var valid;
@@ -1038,9 +1055,9 @@ const variationLabels = {
 
 const opponentLabels = [
     "2 Player",
-    "Random 👹",
-    "Careful 👹",
-    "Mindful 👹",
+    "Random",
+    "Careful",
+    "Mindful",
 ]
 
 

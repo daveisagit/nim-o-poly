@@ -51,7 +51,10 @@
             <div class="px-2 row">
                 <div class="col-4 text-start" id="lblPlayerAName"></div>
                 <div class="col-4 text-center" id="lblVariation"></div>
-                <div class="col-4 text-end" id="lblPlayerBName"></div>
+                <div class="col-4 text-end">
+                    <span id="lblPlayerBName"></span>
+                    <span class="d-none" id="lblBowserIcon">👹</span>
+                </div>
             </div>
 
             <div class="py-2 d-flex flex-row justify-content-center">
@@ -387,7 +390,7 @@
 
 
     <!-- Winner Modal -->
-    <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel">
+    <div class="modal fade" id="winnerModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -408,7 +411,7 @@
     </div>
 
     <!-- Welcome Modal -->
-    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel">
+    <div class="modal fade" id="welcomeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
