@@ -349,7 +349,7 @@ function update_grid() {
             if (winner == "A") {
                 lblWinner.textContent = "You"
             } else {
-                lblWinner.textContent = "The Browser"
+                lblWinner.textContent = "The browser"
             }
 
         }
