@@ -70,6 +70,8 @@ function get_session() {
 
     var s;
 
+    engine_depth = default_engine_depth;
+
     // Playing order
     s = sessionStorage.getItem("nim_player_order");
     if (s != null) player_order = s;
@@ -150,6 +152,7 @@ function get_session() {
             collinearity = parseInt(s);
         }
     }
+    if (collinearity > 4) engine_depth = 2;
 
     // Game scores
     if (score_games == null) {
@@ -656,43 +659,51 @@ function refresh_ui() {
     // if its Bowsers turn and we are not undo-ing things
     if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B" && undo_index == instructions.length) {
         lblBowserIcon.classList.add("rotating");
-        setTimeout(bowser_think, 500);
+        setTimeout(bowser_start_thinking, 500);
     }
 }
 
-function bowser_think() {
-
+function bowser_start_thinking() {
     // generate a default set of bowser options
-    var valid_cells, invalid_cells, ui_delay, timeout_interval, t0, t1;
+    var valid_cells, invalid_cells;
+
     border = get_border(set_of_points);
     [valid_cells, invalid_cells] = get_border_validity(border);
     bowser_options = Array.from(valid_cells);
 
     // no options then quit - browser lost
-    if (bowser_options.length == 0) return;
-
-    // show the thinking modal (which can't be closed) and force play in 3s
-
-    modalBowser = new bootstrap.Modal(thinkingModal, {
-        backdrop: "static",
-        keyboard: false
-    });
-    lblThought.textContent = bt.get_thought();
-    ui_delay = 2000;
-    if (chkChatty.checked) {
-        modalBowser.show();
-        ui_delay = 4000;
+    if (bowser_options.length == 0) {
+        lblBowserIcon.classList.remove("rotating");
+        return;
     }
 
-    t0 = 0;
-    t1 = 0;
+    if (chkChatty.checked) {
+        // show the thinking modal (which can't be closed)
+        lblThought.textContent = bt.get_thought();
+        modalBowser = new bootstrap.Modal(thinkingModal, {
+            backdrop: "static",
+            keyboard: false
+        });
+        modalBowser.show();
+    } else {
+        // When using the thinking modal this is called by 
+        // the event listener for hidden.bs.modal on thinkingModal
+        bowser_think(thinking_duration);
+    }
+}
+
+
+function bowser_think(ui_delay) {
+
+    var timeout_interval;
+    var t0 = 0;
+    var t1 = 0;
     if (!hint) {
         t0 = performance.now();
         outcomes = {};
         outcomes = assess_options();
         t1 = performance.now();
     }
-
     timeout_interval = ui_delay - (t1 - t0);
     if (timeout_interval < 1) {
         bowser_stop_thinking();
@@ -704,7 +715,7 @@ function bowser_think() {
 
 function bowser_stop_thinking() {
     lblBowserIcon.classList.remove("rotating");
-    modalBowser.hide();
+    if (chkChatty.checked) modalBowser.hide();
     setTimeout(bowser_play, 500);
 }
 
@@ -819,6 +830,8 @@ function set_collinear_line() {
 
 function new_game() {
 
+    engine_depth = default_engine_depth;
+
     // clear the grid
     sessionStorage.removeItem("nim_instructions");
     sessionStorage.removeItem("nim_undo_index");
@@ -840,6 +853,7 @@ function new_game() {
     var v = collinearChoices.querySelector("[name=collinear-options]:checked").getAttribute("value");
     sessionStorage.setItem("nim_collinearity", v);
     collinearity = parseInt(v);
+    if (collinearity > 4) engine_depth = 2;
 
     // set the opponent
     var v = opponentChoices.querySelector("[name=opponent-options]:checked").getAttribute("value");
@@ -867,6 +881,11 @@ function new_game() {
 Button Events
 =========================================================================
 */
+
+// Thinking modal visible
+thinkingModal.addEventListener("shown.bs.modal", event => {
+    bowser_think(modal_thinking_duration);
+})
 
 /*
 Chatty
@@ -1216,7 +1235,11 @@ const hint = false;
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
-const engine_depth = 3;
+const modal_thinking_duration = 4000;
+const thinking_duration = 2000;
+const default_engine_depth = 3;
+
+var engine_depth;
 var instructions;
 var set_of_points;
 var border;
