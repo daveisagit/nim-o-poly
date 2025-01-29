@@ -15,7 +15,7 @@ export function get_thought() {
 
 const thoughts = [
     "I need to browse",
-    "Browsers with trousers",
+    "It's the browser's trousers",
     "Mmm, gummy bears",
     "Shh, I'm browsing",
     "Browser not Bowser, ok!",
@@ -29,7 +29,7 @@ const thoughts = [
     "Have you been drinking?",
     "Tap my face!",
     "Not again",
-    "Time to put on my thinking pants",
+    "Time put my thinking pants on",
     "This will not end well",
     "Having a good day?",
     "Stop dribbling!",
@@ -40,5 +40,20 @@ const thoughts = [
     "What have you been eating?",
     "Stop toying with me!",
     "That was so obvious",
-    "Are you getting help?"
+    "Are you getting help?",
+    "What's that smell?",
+    "Flim Flam Floom",
+    "What is troubling you?",
+    "Nice weather",
+    "Will it ever end?",
+    "Guess what?",
+    "Wibble",
+    "So little time",
+    "Good grief!",
+    "It's not rocket science",
+    "Where's Poly gone?",
+    "Well fly me to the moon!",
+    "Anxious moments ...",
+    "Did you sleep well?",
+    "Excuse me!"
 ]
