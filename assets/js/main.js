@@ -53,6 +53,8 @@ const thinkingModal = document.getElementById("thinkingModal");
 const lblThinkingSpinner = document.getElementById("lblThinkingSpinner");
 const lblThought = document.getElementById("lblThought");
 const lblBowserIcon = document.getElementById("lblBowserIcon");
+const chkChatty = document.getElementById("chkChatty");
+const btnEnough = document.getElementById("btnEnough");
 
 function set_cell_fill() {
     cell_fill_a = cell_fill_1;
@@ -89,6 +91,14 @@ function get_session() {
         chkSeparateColours.checked = true;
     } else {
         chkSeparateColours.checked = false;
+    }
+
+    // Chatty Bowser
+    s = sessionStorage.getItem("nim_chatty");
+    if (s == "true") {
+        chkChatty.checked = true;
+    } else {
+        chkChatty.checked = false;
     }
 
     // Variation
@@ -653,8 +663,12 @@ function bowser_think() {
         keyboard: false
     });
     lblThought.textContent = bt.get_thought();
-    // modalBowser.show();
-    setTimeout(bowser_stop_thinking, 3000);
+    if (chkChatty.checked) {
+        modalBowser.show();
+        setTimeout(bowser_stop_thinking, 4000);
+    } else {
+        setTimeout(bowser_stop_thinking, 2000);
+    }
 
 }
 
@@ -823,6 +837,23 @@ function new_game() {
 Button Events
 =========================================================================
 */
+
+/*
+Chatty
+*/
+chkChatty.addEventListener("click", () => {
+    sessionStorage.setItem("nim_chatty", chkChatty.checked);
+});
+
+
+/*
+Enough
+*/
+btnEnough.addEventListener("click", () => {
+    chkChatty.checked = false;
+    sessionStorage.setItem("nim_chatty", chkChatty.checked);
+});
+
 
 /*
 Separate Colours
@@ -1097,7 +1128,7 @@ function get_result(my_points, their_points, depth) {
 
 }
 
-function assess_options(depth = 4) {
+function assess_options(depth = engine_depth) {
     var my_points, their_points, points, bd;
     [my_points, their_points] = get_mine_and_theirs();
     points = new Set([...my_points, ...their_points]);
@@ -1155,6 +1186,7 @@ const hint = true;
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
+const engine_depth = 4;
 var instructions;
 var set_of_points;
 var border;
