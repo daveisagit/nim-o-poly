@@ -243,14 +243,14 @@ function get_mine_and_theirs() {
     var their_points = new Set();
     if (undo_index <= 2 || variation != "Territorial2") {
         my_points.add(JSON.stringify(shape_class.origin));
-        their_points_points.add(JSON.stringify(shape_class.origin));
+        their_points.add(JSON.stringify(shape_class.origin));
     }
     for (var i = 1; i < undo_index; i++) {
         var ins = instructions[i];
         if ((undo_index - i) % 2 == 0) {
             my_points.add(JSON.stringify(ins[1]));
         } else {
-            their_points_points.add(JSON.stringify(ins[1]));
+            their_points.add(JSON.stringify(ins[1]));
         }
     }
     return [my_points, their_points];
@@ -323,7 +323,6 @@ function update_grid() {
 
     var invalid_cells;
     var valid_cells;
-    var outcomes = {};
 
     // generate the border
     border = get_border(set_of_points);
@@ -345,7 +344,8 @@ function update_grid() {
         modal.show();
     } else {
         if (hint) {
-            outcomes = assess_options(set_of_points);
+            outcomes = {};
+            outcomes = assess_options();
         }
     }
 
@@ -665,6 +665,36 @@ function bowser_stop_thinking() {
 }
 
 function bowser_play() {
+
+    var win = new Set();
+    var lose = new Set();
+    var unsure = new Set();
+    if (opponent > 1) {
+        for (const [d, res] of Object.entries(outcomes)) {
+            if (res == (undo_index % 2)) win.add(d);
+            if (res == 1 - (undo_index % 2)) lose.add(d);
+            if (isNaN(res)) unsure.add(d);
+        }
+        if (opponent == 2) {
+            if (unsure.size > 0) {
+                bowser_options = Array.from(unsure);
+            } else {
+                if (win.size > 0) {
+                    bowser_options = Array.from(win);
+                }
+            }
+        }
+        if (opponent == 3) {
+            if (win.size > 0) {
+                bowser_options = Array.from(win);
+            } else {
+                if (unsure.size > 0) {
+                    bowser_options = Array.from(unsure);
+                }
+            }
+        }
+    }
+
     var cell = bowser_options[Math.floor(Math.random() * bowser_options.length)];
     add_cell(cell);
     refresh_ui();
@@ -981,9 +1011,12 @@ Engine
 
 var seen;
 
-function get_result(points, depth = 0) {
+function get_result(my_points, their_points, depth) {
 
     // points is a set of point strings
+    const points = new Set([...my_points, ...their_points]);
+    points.add(JSON.stringify(shape_class.origin));
+
     // to_play = 0 or 1 indexing the player_order
     var to_play = points.size % 2;
 
@@ -992,18 +1025,37 @@ function get_result(points, depth = 0) {
     // check memoise
     var state_string;
     var new_state_string;
-    var points_array = [...points];
-    points_array.sort();
+    var points_array, my_points_array, their_points_array;
+    var valid, invalid, bd;
+
+    // for Basic we don't care who owns the cell
+    // but it is meaningful for Territorial
+    if (variation == "Basic") {
+        points_array = [...points];
+        points_array.sort();
+    } else {
+        my_points_array = [...my_points];
+        my_points_array.sort();
+        their_points_array = [...their_points];
+        their_points_array.sort();
+        points_array = Array(2);
+        points_array[to_play] = my_points_array;
+        points_array[1 - to_play] = their_points_array;
+    }
     state_string = JSON.stringify(points_array);
     if (state_string in seen) {
         return seen[state_string];
     }
 
+    // get the valid border cells
+    if (variation == "Basic") {
+        bd = get_border(points);
+        [valid, invalid] = get_border_validity(bd, points);
+    } else {
+        bd = get_border(points, my_points);
+        [valid, invalid] = get_border_validity(bd, points);
+    }
 
-    const bd = get_border(points);
-    var valid;
-    var invalid;
-    [valid, invalid] = get_border_validity(bd, points);
 
     // if no where to go the other player wins
     if (valid.size == 0) return 1 - to_play;
@@ -1011,12 +1063,23 @@ function get_result(points, depth = 0) {
     var unsure = false;
     for (const p of valid) {
 
-        points_array = [...points];
-        points_array.push(p);
-        points_array.sort();
+        if (variation == "Basic") {
+            points_array = [...points];
+            points_array.push(p);
+            my_points_array = [...my_points];
+            my_points_array.push(p);
+            points_array.sort();
+        } else {
+            my_points_array = [...my_points];
+            my_points_array.push(p);
+            my_points_array.sort();
+            points_array = Array(2);
+            points_array[1 - to_play] = my_points_array;
+            points_array[to_play] = their_points_array;
+        }
         new_state_string = JSON.stringify(points_array);
 
-        var res = get_result(new Set(points_array), depth - 1);
+        var res = get_result(their_points, new Set(my_points_array), depth - 1);
         seen[new_state_string] = res;
 
         // this player can win from here
@@ -1034,24 +1097,32 @@ function get_result(points, depth = 0) {
 
 }
 
-function assess_options(points, depth = 4) {
+function assess_options(depth = 4) {
+    var my_points, their_points, points, bd;
+    [my_points, their_points] = get_mine_and_theirs();
+    points = new Set([...my_points, ...their_points]);
+    points.add(JSON.stringify(shape_class.origin));
     seen = {};
-    const bd = get_border(points);
+    if (variation == "Basic") {
+        bd = get_border(points);
+    } else {
+        bd = get_border(points, my_points);
+    }
+
     var valid;
     var invalid;
     [valid, invalid] = get_border_validity(bd, points);
 
     var options = {};
     for (const p of valid) {
-        var new_points = [...points];
+        var new_points = [...my_points];
         new_points.push(p);
         new_points.sort();
-        var r = get_result(new Set([...new_points]), depth - 1)
+        var r = get_result(their_points, new Set([...new_points]), depth)
         options[p] = r;
     }
     return options
 }
-
 
 
 /*
@@ -1107,6 +1178,7 @@ var cell_fill_a;
 var cell_fill_b;
 var cell_fill_start;
 var bowser_options;
+var outcomes;
 var modalBowser;
 
 // migrate any session/local storage values to the latest version
