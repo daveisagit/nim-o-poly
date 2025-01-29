@@ -343,11 +343,25 @@ function update_grid() {
     // we have a winner
     if (valid_cells.size == 0) {
         var winner = player_order[(undo_index) % 2];
-        lblWinner.textContent = winner;
+        if (opponent == 0) {
+            lblWinner.textContent = "Player " + winner;
+        } else {
+            if (winner == "A") {
+                lblWinner.textContent = "You"
+            } else {
+                lblWinner.textContent = "The Browser"
+            }
+
+        }
         if (winner == "A") {
             lblWinnersName.textContent = lblPlayerAName.textContent;
         } else {
-            lblWinnersName.textContent = lblPlayerBName.textContent;
+            if (opponent == 0) {
+                lblWinnersName.textContent = lblPlayerBName.textContent;
+            }
+            else {
+                lblWinnersName.textContent = "";
+            }
         }
         lblCellsPlayed.textContent = undo_index;
         var modal = new bootstrap.Modal(winnerModal);
