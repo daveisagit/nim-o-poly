@@ -655,6 +655,7 @@ function refresh_ui() {
 
     // if its Bowsers turn and we are not undo-ing things
     if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B" && undo_index == instructions.length) {
+        lblBowserIcon.classList.add("rotating");
         setTimeout(bowser_think, 500);
     }
 }
@@ -662,7 +663,7 @@ function refresh_ui() {
 function bowser_think() {
 
     // generate a default set of bowser options
-    var valid_cells, invalid_cells;
+    var valid_cells, invalid_cells, ui_delay, timeout_interval, t0, t1;
     border = get_border(set_of_points);
     [valid_cells, invalid_cells] = get_border_validity(border);
     bowser_options = Array.from(valid_cells);
@@ -670,23 +671,33 @@ function bowser_think() {
     // no options then quit - browser lost
     if (bowser_options.length == 0) return;
 
-    if (!hint) {
-        outcomes = {};
-        outcomes = assess_options();
-    }
-
     // show the thinking modal (which can't be closed) and force play in 3s
-    lblBowserIcon.classList.add("rotating");
+
     modalBowser = new bootstrap.Modal(thinkingModal, {
         backdrop: "static",
         keyboard: false
     });
     lblThought.textContent = bt.get_thought();
+    ui_delay = 2000;
     if (chkChatty.checked) {
         modalBowser.show();
-        setTimeout(bowser_stop_thinking, 3200);
+        ui_delay = 4000;
+    }
+
+    t0 = 0;
+    t1 = 0;
+    if (!hint) {
+        t0 = performance.now();
+        outcomes = {};
+        outcomes = assess_options();
+        t1 = performance.now();
+    }
+
+    timeout_interval = ui_delay - (t1 - t0);
+    if (timeout_interval < 1) {
+        bowser_stop_thinking();
     } else {
-        setTimeout(bowser_stop_thinking, 2000);
+        setTimeout(bowser_stop_thinking, timeout_interval);
     }
 
 }
@@ -694,7 +705,7 @@ function bowser_think() {
 function bowser_stop_thinking() {
     lblBowserIcon.classList.remove("rotating");
     modalBowser.hide();
-    setTimeout(bowser_play, 600);
+    setTimeout(bowser_play, 500);
 }
 
 function bowser_play() {
