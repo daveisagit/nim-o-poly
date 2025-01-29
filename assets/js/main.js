@@ -97,10 +97,12 @@ function get_session() {
 
     // Chatty Bowser
     s = sessionStorage.getItem("nim_chatty");
-    if (s == "true") {
-        chkChatty.checked = true;
-    } else {
-        chkChatty.checked = false;
+    if (s != null) {
+        if (s == "true") {
+            chkChatty.checked = true;
+        } else {
+            chkChatty.checked = false;
+        }
     }
 
     // Variation
