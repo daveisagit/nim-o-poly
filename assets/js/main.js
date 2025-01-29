@@ -641,7 +641,7 @@ function refresh_ui() {
 
     // if its Bowsers turn and we are not undo-ing things
     if (opponent > 0 && player_order[(undo_index + 1) % 2] == "B" && undo_index == instructions.length) {
-        setTimeout(bowser_think, 1000);
+        setTimeout(bowser_think, 500);
     }
 }
 
@@ -656,6 +656,11 @@ function bowser_think() {
     // no options then quit - browser lost
     if (bowser_options.length == 0) return;
 
+    if (!hint) {
+        outcomes = {};
+        outcomes = assess_options();
+    }
+
     // show the thinking modal (which can't be closed) and force play in 3s
     lblBowserIcon.classList.add("rotating");
     modalBowser = new bootstrap.Modal(thinkingModal, {
@@ -665,7 +670,7 @@ function bowser_think() {
     lblThought.textContent = bt.get_thought();
     if (chkChatty.checked) {
         modalBowser.show();
-        setTimeout(bowser_stop_thinking, 4000);
+        setTimeout(bowser_stop_thinking, 3200);
     } else {
         setTimeout(bowser_stop_thinking, 2000);
     }
@@ -1182,11 +1187,11 @@ const opponentLabels = [
     "Mindful",
 ]
 
-const hint = true;
+const hint = false;
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
-const engine_depth = 4;
+const engine_depth = 3;
 var instructions;
 var set_of_points;
 var border;
