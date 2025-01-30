@@ -224,61 +224,69 @@
         <div class="collapse" id="help">
             <div class="mb-4 d-flex justify-content-between">
                 <div></div>
-                <div>
+                <div class="">
                     <h1 class="my-2">Rules</h1>
 
                     <div class="text-start">
-                        <h3>Basic Play</h3>
-                        Together, you and your opponent build a <a href="https://en.wikipedia.org/wiki/Polyomino"
-                            target="wiki">Polyomino</a> taking turns to add a new adjacent cell.
-                        <br><a href="https://en.wikipedia.org/wiki/Nim" target="wiki">Nim</a> is usually played as
-                        <a href="https://en.wikipedia.org/wiki/Mis%C3%A8re" target="wiki">misère</a> game, but in <span
-                            class="bamboo">Nim-o-Poly</span>
-                        play is <i>"Normal"</i>,
-                        <br> in that the last player able to play is the winner, i.e. if you can't go then you've lost.
-                        <p></p>
-
+                        <h3>Play</h3>
                         <div>
-                            <span class="align-middle">The Polyomino can be made up from connected
-                                <strong>square</strong> or <strong>hexagonal</strong>
-                                cells</span>
-                            <span class="align-middle material-symbols-outlined ">square</span>
-                            <span class="align-middle material-symbols-outlined ">hexagon</span>
+                            Decide what type of Polyomino game (square or hexagonal) you want to play.
+                            <br>
+                            Together, you and your opponent build the <a href="https://en.wikipedia.org/wiki/Polyomino"
+                                target="wiki">Polyomino</a> taking turns to add a new adjacent cell until it's not
+                            possible
+                            to play any more.
                         </div>
-                        <br>
-                        Any new cell added during the game must
-                        <ul>
-                            <li>be connected to the current shape</li>
-                            <li>not break the collinearity limit</li>
-                            <li>meet any other restrictions of the variation being played</li>
-                        </ul>
 
-                        <p>The <a href="https://en.wikipedia.org/wiki/Collinearity" target="wiki">Collinearity</a>
-                            limit is the maximum number of cells that are allowed to be collinear <br>on any line in the
-                            plane through the cell centres.</p>
+                        <div class="mt-2">
+                            <a href="https://en.wikipedia.org/wiki/Nim" target="wiki">Nim</a> is usually played as
+                            <a href="https://en.wikipedia.org/wiki/Mis%C3%A8re" target="wiki">misère</a> game, but in
+                            <span class="bamboo">Nim-o-Poly</span>
+                            play is <i>"Normal"</i>, in that the last player able to play is the winner, i.e. if you
+                            can't go then you've lost. The winner receives a number of points equal to the size of the
+                            polyomino finally formed.
+                        </div>
 
-                        <p>During the game all connected options are shown for selection, with the valid ones shaded
-                            <span class="text-success">green</span>
-                            <br>and the ones which break the collinearity limit shaded <span
-                                class="text-danger">red</span>
-                        </p>
-                        <p>Selecting an invalid cell will show you why it is invalid.</p>
+                        <div class="mt-2">
+                            Any new cell added during the game must
+                            <ul>
+                                <li>be connected to the current shape</li>
+                                <li>not break the collinearity limit</li>
+                                <li>meet any other restrictions of the variation being played</li>
+                            </ul>
+                        </div>
 
-                        <p>The winner receives a number of points equal to the size of the polyomino finally formed.</p>
+                        <div class="mt-2">
+                            The <a href="https://en.wikipedia.org/wiki/Collinearity" target="wiki">Collinearity</a>
+                            limit is the maximum number of cells that are allowed to be collinear on any line in
+                            the plane through the cell centres.
+                        </div>
 
-                        <div>
-                            <span class="align-middle">The shape, collinearity limit and variation can be set in the
-                                game options</span>
-                            <span class="align-middle material-symbols-outlined ">sports</span>
+                        <div class="mt-2">
+                            During the game all connected options are shown for selection, with the valid ones shaded
+                            <span class="text-success">green</span> and the ones which break the collinearity limit
+                            shaded <span class="text-danger">red</span>. Selecting an invalid cell will show you why.
+                        </div>
+
+                        <div class="mt-2">
+                            <div>
+                                <span class="align-middle">The shape, collinearity limit and variation can be set in the
+                                    game options</span>
+                                <span class="align-middle material-symbols-outlined ">sports</span>.
+                            </div>
                         </div>
 
                         <h3 class="my-4">Variations</h3>
                         <h5>Territorial</h5>
-                        You can only place next to your own cells, or the starting cell.
-                        <br>In <i>Territorial 1</i> you can go next to the starting cell at any time.
-                        <br>In <i>Territorial 2</i> you can <strong>only</strong> go next to the starting cell
-                        <strong>once</strong> (at the very start).
-                        <p>Choosing these variations will default the separate colours option as enabled.</p>
+                        In this variation you can only place a new cell next to your own existing cells, or the starting
+                        cell.
+                        <ul class="mt-1">
+                            <li>In <i>Territorial 1</i> you can go next to the starting cell at any time.</li>
+                            <li>In <i>Territorial 2</i> you can <strong>only</strong> go next to the starting cell
+                                <strong>once</strong> (at the very start).
+                            </li>
+                        </ul>
+                        Choosing these variations will default the separate colours option as enabled.
 
 
                         <h1 class="my-4 text-center">Game Options <span
@@ -388,7 +396,7 @@
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <h1 class="bamboo">Undo</h1>
-                    <h1>😲🤨🤔</h1>
+                    <h1>😲 🤨 🤔</h1>
                     <p class="h5">Do you want to re-write history ?</p>
                     <p class="h5">Does your opponent agree ?</p>
                 </div>
