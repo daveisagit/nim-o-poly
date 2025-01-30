@@ -1237,7 +1237,7 @@ const hint = false;
 const cell_fill_1 = "steelblue";
 const cell_fill_2 = "peru";
 const cell_size = 20;
-const modal_thinking_duration = 4000;
+const modal_thinking_duration = 3500;
 const thinking_duration = 2000;
 const default_engine_depth = 3;
 
