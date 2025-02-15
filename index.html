@@ -59,8 +59,8 @@
 
             <div class="py-2 d-flex flex-row justify-content-center">
                 <button type="button" class="btn btn-sm" data-bs-toggle="collapse" data-bs-target="#new-game"
-                    title="Start a new game">
-                    <span class="material-symbols-outlined  h2">sports</span>
+                    title="Game options and settings">
+                    <span class="material-symbols-outlined  h2">settings</span>
                 </button>
 
                 <button type="button" class="btn btn-sm" id="btnUndo" title="Undo">
@@ -95,12 +95,8 @@
             <div class="">
                 <p>Two players or play <strong><i>The Browser</i></strong></p>
                 <div class="d-flex justify-content-center m-4" id="opponentChoice">
-                    <input type="radio" class="btn-check" name="opponent-options" id="opponent0" autocomplete="off"
-                        value="0" checked>
-                    <label class="btn mx-2" for="opponent0">2 Players<span
-                            class="d-block material-symbols-outlined  h1">group</span></label>
                     <input type="radio" class="btn-check" name="opponent-options" id="opponent1" autocomplete="off"
-                        value="1">
+                        value="1" checked>
                     <label class="btn mx-2" for="opponent1">Random<img class="d-block bowser"
                             src="./assets/img/bowser-1.png" alt=""></label>
                     <input type="radio" class="btn-check" name="opponent-options" id="opponent2" autocomplete="off"
@@ -111,6 +107,11 @@
                         value="3">
                     <label class="btn mx-2" for="opponent3">Mindful<img class="d-block bowser"
                             src="./assets/img/bowser-3.png" alt=""></label>
+                    <input type="radio" class="btn-check" name="opponent-options" id="opponent0" autocomplete="off"
+                        value="0">
+                    <label class="btn mx-2" for="opponent0">2 Players<span
+                            class="d-block material-symbols-outlined  h1">group</span></label>
+
                 </div>
             </div>
             <div class="form-group d-flex justify-content-center">
@@ -272,7 +273,7 @@
                             <div>
                                 <span class="align-middle">The shape, collinearity limit and variation can be set in the
                                     game options</span>
-                                <span class="align-middle material-symbols-outlined ">sports</span>.
+                                <span class="align-middle material-symbols-outlined ">settings</span>.
                             </div>
                         </div>
 
@@ -290,7 +291,7 @@
 
 
                         <h1 class="my-4 text-center">Game Options <span
-                                class="align-middle material-symbols-outlined  h1">sports</span></h1>
+                                class="align-middle material-symbols-outlined  h1">settings</span></h1>
 
                         <div class="text-start">
                             Some things you can change during play:
@@ -456,10 +457,11 @@
                         <span class="align-middle material-symbols-outlined ">help</span>
                         <span class="align-middle">for more details.</span>
                     </div>
-                    <p>Or, just get on learn as you play.</p>
+                    <p>Or, just get on with it and learn as you play.</p>
 
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnGotIt">Got it!</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>

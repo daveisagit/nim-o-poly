@@ -38,6 +38,7 @@ const undoModal = document.getElementById("undoModal");
 const inpUndo = document.getElementById("inpUndo");
 const btnAcceptUndo = document.getElementById("btnAcceptUndo");
 const welcomeModal = document.getElementById("welcomeModal");
+const btnGotIt = document.getElementById("btnGotIt");
 const chkSeparateColours = document.getElementById("chkSeparateColours");
 const lblVariation = document.getElementById("lblVariation");
 const variationChoice = document.getElementById("variationChoice");
@@ -884,6 +885,13 @@ Button Events
 =========================================================================
 */
 
+/*
+Welcome dismiss
+*/
+btnGotIt.addEventListener("click", () => {
+    localStorage.setItem("nim_got_it", true);
+});
+
 // Thinking modal visible
 thinkingModal.addEventListener("shown.bs.modal", event => {
     bowser_think(modal_thinking_duration);
@@ -1297,9 +1305,8 @@ var g_cells = g_elem.append("g");
 !! Go !!
 */
 
-var seenWelcome = localStorage.getItem("nim_welcome");
+var seenWelcome = localStorage.getItem("nim_got_it");
 if (seenWelcome == null) {
-    localStorage.setItem("nim_welcome", true);
     var modal = new bootstrap.Modal(welcomeModal);
     modal.show();
 }
